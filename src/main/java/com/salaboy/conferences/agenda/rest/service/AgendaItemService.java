@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class AgendaItemService {
 
-    @Value("${EVENTS_ENABLED:true}")
+    @Value("${EVENTS_ENABLED:false}")
     private Boolean eventsEnabled;
 
     @Value("${K_SINK:http://broker-ingress.knative-eventing.svc.cluster.local/default/default}")
