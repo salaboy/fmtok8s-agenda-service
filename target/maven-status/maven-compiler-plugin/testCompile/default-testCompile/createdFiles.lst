@@ -1,0 +1,5 @@
+com/salaboy/conferences/agenda/rest/service/TimeDayGeneratorTests.class
+com/salaboy/conferences/agenda/rest/util/AgendaItemCreator.class
+com/salaboy/conferences/agenda/rest/ContractVerifierTest.class
+com/salaboy/conferences/agenda/rest/ContractVerifierBase.class
+com/salaboy/conferences/agenda/rest/controller/AgendaControllerIntegrationTest.class
