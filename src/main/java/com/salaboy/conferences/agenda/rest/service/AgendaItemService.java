@@ -44,57 +44,57 @@ public class AgendaItemService {
         this.agendaItemRepository = agendaItemRepository;
     }
 
-    public Mono<String> createAgenda(AgendaItem agendaItem)  {
-
-
+    public Mono<String> createAgendaItem(AgendaItem agendaItem)  {
+        log.info("> New Agenda Item Received: " + agendaItem);
         if (Pattern.compile(Pattern.quote("fail"), Pattern.CASE_INSENSITIVE).matcher(agendaItem.getTitle()).find()) {
+            log.error(">> Something went wrong, it seems on purpose :)");
             throw new IllegalStateException("Something went wrong with adding the Agenda Item: " + agendaItem);
         }
-
-
-
 
         return agendaItemRepository.save(agendaItem)
                 .doOnSuccess(savedAgendaItem -> {
                     log.info("> Agenda Item Added to Agenda: {}", savedAgendaItem);
                     log.info("\t eventsEnabled: " + eventsEnabled);
-
                     if(eventsEnabled) {
-                        Proposal proposal = new Proposal(agendaItem.getProposalId(), agendaItem.getAuthor(), agendaItem.getTitle(), new Date());
-                        String proposalString = null;
-                        try {
-                            proposalString = objectMapper.writeValueAsString(proposal);
-                            proposalString = objectMapper.writeValueAsString(proposalString); //needs double quoted ??
-                        } catch (JsonProcessingException e) {
-                            e.printStackTrace();
-                        }
-                        CloudEventBuilder cloudEventBuilder = CloudEventBuilder.v1()
-                                .withId(UUID.randomUUID().toString())
-                                .withTime(OffsetDateTime.now().toZonedDateTime()) // bug-> https://github.com/cloudevents/sdk-java/issues/200
-                                .withType("Agenda.ItemCreated")
-                                .withSource(URI.create("agenda-service.default.svc.cluster.local"))
-                                .withData(proposalString.getBytes())
-                                .withDataContentType("application/json")
-                                .withSubject(savedAgendaItem.getTitle());
-
-                        CloudEvent zeebeCloudEvent = ZeebeCloudEventsHelper
-                                .buildZeebeCloudEvent(cloudEventBuilder)
-                                .withCorrelationKey(proposal.getId()).build();
-
-                        logCloudEvent(zeebeCloudEvent);
-                        WebClient webClient = WebClient.builder().baseUrl(K_SINK).filter(logRequest()).build();
-
-                        WebClient.ResponseSpec postCloudEvent = CloudEventsHelper.createPostCloudEvent(webClient, zeebeCloudEvent);
-
-                        postCloudEvent.bodyToMono(String.class)
-                                .doOnError(t -> t.printStackTrace())
-                                .doOnSuccess(s -> log.info("Cloud Event Posted to K_SINK -> " + K_SINK + ": Result: " +  s))
-                                .subscribe();
+                        emitCloudEventForAgendaItemAdded(savedAgendaItem);
                     }
                 })
-                .doOnError(i -> log.info("> Agenda Item NOT Added to Agenda: {}", i))
+                .doOnError(i -> log.error(">> Agenda Item NOT Added to Agenda: {}", i))
                 .map(i -> !Strings.isBlank(i.getId()) ? "Agenda Item Added to Agenda" : "Agenda Item Not Added");
 
+    }
+
+    private void emitCloudEventForAgendaItemAdded(AgendaItem agendaItem) {
+        Proposal proposal = new Proposal(agendaItem.getProposalId(), agendaItem.getAuthor(), agendaItem.getTitle(), new Date());
+        String proposalString = null;
+        try {
+            proposalString = objectMapper.writeValueAsString(proposal);
+            proposalString = objectMapper.writeValueAsString(proposalString); //needs double quoted ??
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        CloudEventBuilder cloudEventBuilder = CloudEventBuilder.v1()
+                .withId(UUID.randomUUID().toString())
+                .withTime(OffsetDateTime.now().toZonedDateTime()) // bug-> https://github.com/cloudevents/sdk-java/issues/200
+                .withType("Agenda.ItemCreated")
+                .withSource(URI.create("agenda-service.default.svc.cluster.local"))
+                .withData(proposalString.getBytes())
+                .withDataContentType("application/json")
+                .withSubject(agendaItem.getTitle());
+
+        CloudEvent zeebeCloudEvent = ZeebeCloudEventsHelper
+                .buildZeebeCloudEvent(cloudEventBuilder)
+                .withCorrelationKey(proposal.getId()).build();
+
+        logCloudEvent(zeebeCloudEvent);
+        WebClient webClient = WebClient.builder().baseUrl(K_SINK).filter(logRequest()).build();
+
+        WebClient.ResponseSpec postCloudEvent = CloudEventsHelper.createPostCloudEvent(webClient, zeebeCloudEvent);
+
+        postCloudEvent.bodyToMono(String.class)
+                .doOnError(t -> t.printStackTrace())
+                .doOnSuccess(s -> log.info("Cloud Event Posted to K_SINK -> " + K_SINK + ": Result: " +  s))
+                .subscribe();
     }
 
     private void logCloudEvent(CloudEvent cloudEvent) {

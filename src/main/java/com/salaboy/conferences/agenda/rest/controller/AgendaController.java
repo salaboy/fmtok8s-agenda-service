@@ -29,30 +29,31 @@ public class AgendaController {
 
     @PostMapping
     public Mono<String> newAgendaItem(@RequestBody AgendaItem agendaItem) {
-        log.info("> New Agenda Item Received: " + agendaItem);
-        return agendaItemService.createAgenda(agendaItem);
+        log.info("> REST ENDPOINT INVOKED for Creating a new Agenda Item");
+        return agendaItemService.createAgendaItem(agendaItem);
     }
 
     @GetMapping
     public Flux<AgendaItem> getAll() {
+        log.info("> REST ENDPOINT INVOKED for Getting All Agenda Items");
         return agendaItemRepository.findAll();
     }
 
     @GetMapping("/day/{day}")
     public Mono<Set<AgendaItem>> getAllByDay(@PathVariable(value = "day", required = true) final String day) {
+        log.info("> REST ENDPOINT INVOKED for Getting Agenda Items by Day: " + day);
         return agendaItemRepository.findAllByDay(day).collect(Collectors.toSet());
     }
 
     @GetMapping("/{id}")
     public Mono<AgendaItem> getById(@PathVariable("id") String id) {
-
+        log.info("> REST ENDPOINT INVOKED for Getting Agenda Item by Id: " + id);
         return agendaItemRepository.findById(id);
     }
 
     @DeleteMapping("/")
     public Mono<Void> clearAgendaItems() {
-
-        log.info(">>> Deleting all");
+        log.info("> Deleting all Agenda Items");
         return agendaItemRepository.deleteAll();
     }
 
