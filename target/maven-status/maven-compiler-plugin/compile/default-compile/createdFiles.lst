@@ -1,8 +1,0 @@
-com/salaboy/conferences/agenda/rest/service/AgendaItemService.class
-com/salaboy/conferences/agenda/rest/controller/AgendaController.class
-com/salaboy/conferences/agenda/rest/AgendaServiceApplication.class
-com/salaboy/conferences/agenda/rest/repository/AgendaItemRepository.class
-com/salaboy/conferences/agenda/rest/controller/InfoController.class
-com/salaboy/conferences/agenda/rest/model/Proposal.class
-com/salaboy/conferences/agenda/rest/model/AgendaItem.class
-com/salaboy/conferences/agenda/rest/service/TimeDayGenerator.class
