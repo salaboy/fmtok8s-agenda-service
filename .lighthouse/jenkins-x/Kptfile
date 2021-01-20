@@ -1,11 +1,11 @@
 apiVersion: kpt.dev/v1alpha1
 kind: Kptfile
 metadata:
-    name: jenkins-x
+  name: jenkins-x
 upstream:
-    type: git
-    git:
-        commit: bc0d365dd4a8dc164fe65fb1539c87503d78fe3f
-        repo: https://github.com/jenkins-x/jx3-pipeline-catalog
-        directory: /packs/maven-java11/.lighthouse/jenkins-x
-        ref: master
+  type: git
+  git:
+    commit: 1d39235ee9235d7d52d4025a8e59cb8bda04306a
+    repo: https://github.com/jenkins-x/jx3-pipeline-catalog
+    directory: /packs/maven-java11/.lighthouse/jenkins-x
+    ref: master
