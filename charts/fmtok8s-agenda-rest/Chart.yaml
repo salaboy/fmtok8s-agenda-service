@@ -1,5 +1,6 @@
 apiVersion: v2
+appVersion: 0.0.7
 description: FMTOK8s Agenda Service (REST) Helm chart for Kubernetes
-name: fmtok8s-agenda-rest
-version: 0.1.0-SNAPSHOT
 icon: https://raw.githubusercontent.com/cdfoundation/artwork/master/jenkinsx/icon/color/jenkinsx-icon-color.png
+name: fmtok8s-agenda-rest
+version: 0.0.7
