@@ -1,0 +1,68 @@
+{{- if .Capabilities.APIVersions.Has "jenkins.io/v1/Release" }}
+apiVersion: jenkins.io/v1
+kind: Release
+metadata:
+  creationTimestamp: "2021-02-13T13:24:39Z"
+  deletionTimestamp: null
+  name: '{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}'
+spec:
+  commits:
+  - author:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    branch: master
+    committer:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    message: |
+      chore: release 0.0.10
+    sha: 957834120fdb425cab6e5dddee6e2f72f251aa2b
+  - author:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    branch: master
+    committer:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    message: |
+      chore: add variables
+    sha: 75079c803ef347ef559d079e85fc51023be495f0
+  - author:
+      email: salaboy@gmail.com
+      name: salaboy
+    branch: master
+    committer:
+      email: salaboy@gmail.com
+      name: salaboy
+    message: |
+      avoiding promotion to staging
+    sha: bedc749bdea6bd8a098fc09e3c578dd29f6e3f1e
+  - author:
+      email: salaboy@gmail.com
+      name: salaboy
+    branch: master
+    committer:
+      email: salaboy@gmail.com
+      name: salaboy
+    message: |
+      update charts (https://github.com/jenkins-x/jx3-gitops-template) from master (cd501cf5c185c592663d68273b60e3413c0278fb) to master (ffc411f9b9e061f681d3788954bdc009137e5e30)
+    sha: 9ebad2b54bc9c1957a5a755018c5078fece1e460
+  - author:
+      email: salaboy@gmail.com
+      name: salaboy
+    branch: master
+    committer:
+      email: salaboy@gmail.com
+      name: salaboy
+    message: |
+      update jenkins-x (https://github.com/jenkins-x/jx3-pipeline-catalog) from master (1d39235ee9235d7d52d4025a8e59cb8bda04306a) to master (aee79428308d9be55f15dbe3863f65ed3e1ab6d0)
+    sha: 8479d2cb7aea0cce5f7fade1ce7d7ad8dbd27e7d
+  gitHttpUrl: https://github.com/salaboy/fmtok8s-agenda-rest
+  gitOwner: salaboy
+  gitRepository: fmtok8s-agenda-rest
+  name: '{{ .Chart.Name }}'
+  releaseNotesURL: https://github.com/salaboy/fmtok8s-agenda-rest/releases/tag/v0.0.11
+  version: v0.0.11
+status: {}
+ 
+{{- end }}
