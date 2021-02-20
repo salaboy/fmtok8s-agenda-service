@@ -1,6 +1,7 @@
 package com.salaboy.conferences.agenda.rest.security;
 
 
+import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
@@ -30,11 +31,16 @@ public class SecurityConfig {
 
         http
                 .csrf().disable()
+
                 .authorizeExchange(exchanges ->
                         exchanges
                                 .pathMatchers(HttpMethod.POST, "/**").hasAnyAuthority("organizer")
                                 .pathMatchers(HttpMethod.DELETE, "/**").hasAnyAuthority("organizer")
+                                .matchers(EndpointRequest.to("health")).permitAll()
+                                .matchers(EndpointRequest.to("info")).permitAll()
+                                .matchers(EndpointRequest.to("prometheus")).permitAll()
                                 .anyExchange().permitAll())
+
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(grantedAuthoritiesExtractor())));
 
