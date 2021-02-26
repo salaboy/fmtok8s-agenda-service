@@ -62,7 +62,9 @@ public class SecurityConfig {
         @Override
         public Collection<GrantedAuthority> convert(Jwt jwt) {
 
-            @SuppressWarnings("unchecked")
+            System.out.println("JWT: " + jwt.toString());
+            System.out.println("JWT CLaims: " + jwt.getClaims());
+
             var roles = (List<String>) jwt.getClaims().getOrDefault("groups", Collections.emptyList());
 
             return roles.stream()
