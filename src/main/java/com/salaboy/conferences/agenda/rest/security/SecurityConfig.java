@@ -65,7 +65,8 @@ public class SecurityConfig {
             System.out.println("JWT: " + jwt.toString());
             System.out.println("JWT CLaims: " + jwt.getClaims());
 
-            var roles = (List<String>) jwt.getClaims().getOrDefault("groups", Collections.emptyList());
+            var roles = (List<String>) jwt.getClaims().getOrDefault("roles", Collections.emptyList());
+            System.out.println("Roles:" + roles);
 
             return roles.stream()
                     .map(SimpleGrantedAuthority::new)
