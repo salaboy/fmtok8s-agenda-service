@@ -1,0 +1,58 @@
+{{- if .Capabilities.APIVersions.Has "jenkins.io/v1/Release" }}
+apiVersion: jenkins.io/v1
+kind: Release
+metadata:
+  creationTimestamp: "2021-02-27T17:54:36Z"
+  deletionTimestamp: null
+  name: '{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}'
+spec:
+  commits:
+  - author:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    branch: master
+    committer:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    message: |
+      chore: release 0.0.20
+    sha: 6744339343ce1a97a8add171cb9db7324e2c23e0
+  - author:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    branch: master
+    committer:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    message: |
+      chore: add variables
+    sha: 368d5f83c938974005e65a3bf8f5310351ce6e50
+  - author:
+      email: salaboy@gmail.com
+      name: salaboy
+    branch: master
+    committer:
+      email: salaboy@gmail.com
+      name: salaboy
+    message: |
+      updating profile to be sso
+    sha: bf9a994c45466e75c0577866274dbe9e804b15a7
+  - author:
+      email: salaboy@gmail.com
+      name: salaboy
+    branch: master
+    committer:
+      email: salaboy@gmail.com
+      name: salaboy
+    message: |
+      updating security config
+    sha: 80a0faa960cefcc08be59dbbb911db031fbab3b9
+  gitHttpUrl: https://github.com/salaboy/fmtok8s-agenda-rest
+  gitOwner: salaboy
+  gitRepository: fmtok8s-agenda-rest
+  name: '{{ .Chart.Name }}'
+  releaseNotesURL: https://github.com/salaboy/fmtok8s-agenda-rest/releases/tag/v0.0.21
+  version: v0.0.21
+status: {}
+ 
+{{- end }}
