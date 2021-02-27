@@ -60,12 +60,7 @@ public class SecurityConfig {
 
         @Override
         public Collection<GrantedAuthority> convert(Jwt jwt) {
-
-            System.out.println("JWT: " + jwt.toString());
-            System.out.println("JWT CLaims: " + jwt.getClaims());
-
             var roles = (List<String>) jwt.getClaims().getOrDefault("roles", Collections.emptyList());
-            System.out.println("Roles:" + roles);
 
             return roles.stream()
                     .map(SimpleGrantedAuthority::new)
