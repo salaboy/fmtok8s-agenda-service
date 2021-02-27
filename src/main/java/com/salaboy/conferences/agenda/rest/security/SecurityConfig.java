@@ -34,14 +34,13 @@ public class SecurityConfig {
 
                 .authorizeExchange(exchanges ->
                         exchanges
-                                .pathMatchers(HttpMethod.POST, "/**").hasRole("organizer")
-                                .pathMatchers(HttpMethod.DELETE, "/**").hasRole("organizer")
+                                .pathMatchers(HttpMethod.POST, "/**").hasAuthority("organizer")
+                                .pathMatchers(HttpMethod.DELETE, "/**").hasAuthority("organizer")
                                 .pathMatchers(HttpMethod.GET, "/**").permitAll()
                                 .pathMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                                 .pathMatchers(HttpMethod.GET, "/actuator/info").permitAll()
                                 .pathMatchers(HttpMethod.GET, "/prometheus").permitAll()
-                                .anyExchange().permitAll())
-
+                                .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(grantedAuthoritiesExtractor())));
 
