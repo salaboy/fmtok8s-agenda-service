@@ -1,7 +1,6 @@
 package com.salaboy.conferences.agenda.rest.security;
 
 
-import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
@@ -22,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Profile("prod")
+@Profile("sso")
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
