@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -25,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @AutoConfigureWebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ActiveProfiles("dev")
 public class AgendaControllerIntegrationTest {
 
     @Autowired
