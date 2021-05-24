@@ -1,0 +1,47 @@
+{{- if .Capabilities.APIVersions.Has "jenkins.io/v1/Release" }}
+apiVersion: jenkins.io/v1
+kind: Release
+metadata:
+  creationTimestamp: "2021-05-24T09:13:13Z"
+  deletionTimestamp: null
+  name: '{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}'
+spec:
+  commits:
+  - author:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    branch: master
+    committer:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    message: |
+      chore: release 0.0.26
+    sha: bafc47ef596012ff605667202fb15641ab3cd5c9
+  - author:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    branch: master
+    committer:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    message: |
+      chore: add variables
+    sha: d9a7954a04732f4b419f74c265c157949d61123a
+  - author:
+      email: Salaboy@gmail.com
+      name: salaboy
+    branch: master
+    committer:
+      email: noreply@github.com
+      name: GitHub
+    message: Update ksvc.yaml
+    sha: 60ee754bc19631df7062c215cf1d6c872a2ed104
+  gitHttpUrl: https://github.com/salaboy/fmtok8s-agenda-rest
+  gitOwner: salaboy
+  gitRepository: fmtok8s-agenda-rest
+  name: '{{ .Chart.Name }}'
+  releaseNotesURL: https://github.com/salaboy/fmtok8s-agenda-rest/releases/tag/v0.0.27
+  version: v0.0.27
+status: {}
+ 
+{{- end }}
