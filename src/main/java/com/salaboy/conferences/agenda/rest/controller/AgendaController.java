@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,33 +29,33 @@ public class AgendaController {
     }
 
     @PostMapping
-    public Mono<String> newAgendaItem(@RequestBody AgendaItem agendaItem) {
+    public String newAgendaItem(@RequestBody AgendaItem agendaItem) {
         log.info("> REST ENDPOINT INVOKED for Creating a new Agenda Item");
         return agendaItemService.createAgendaItem(agendaItem);
     }
 
     @GetMapping
-    public Flux<AgendaItem> getAll() {
+    public Iterable<AgendaItem> getAll() {
         log.info("> REST ENDPOINT INVOKED for Getting All Agenda Items");
         return agendaItemRepository.findAll();
     }
 
     @GetMapping("/day/{day}")
-    public Mono<Set<AgendaItem>> getAllByDay(@PathVariable(value = "day", required = true) final String day) {
+    public Iterable<AgendaItem> getAllByDay(@PathVariable(value = "day", required = true) final String day) {
         log.info("> REST ENDPOINT INVOKED for Getting Agenda Items by Day: " + day);
-        return agendaItemRepository.findAllByDay(day).collect(Collectors.toSet());
+        return agendaItemRepository.findAllByDay(day);
     }
 
     @GetMapping("/{id}")
-    public Mono<AgendaItem> getById(@PathVariable("id") String id) {
+    public Optional<AgendaItem> getById(@PathVariable("id") String id) {
         log.info("> REST ENDPOINT INVOKED for Getting Agenda Item by Id: " + id);
         return agendaItemRepository.findById(id);
     }
 
     @DeleteMapping("/")
-    public Mono<Void> clearAgendaItems() {
+    public void clearAgendaItems() {
         log.info("> Deleting all Agenda Items");
-        return agendaItemRepository.deleteAll();
+        agendaItemRepository.deleteAll();
     }
 
 }
