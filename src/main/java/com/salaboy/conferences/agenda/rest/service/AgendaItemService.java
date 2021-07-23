@@ -2,7 +2,7 @@ package com.salaboy.conferences.agenda.rest.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.salaboy.cloudevents.helper.CloudEventsHelper;
+
 import com.salaboy.conferences.agenda.rest.model.AgendaItem;
 import com.salaboy.conferences.agenda.rest.model.Proposal;
 import com.salaboy.conferences.agenda.rest.repository.AgendaItemRepository;
@@ -11,7 +11,6 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.jackson.JsonFormat;
-import io.zeebe.cloudevents.ZeebeCloudEventsHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,23 +43,23 @@ public class AgendaItemService {
         this.agendaItemRepository = agendaItemRepository;
     }
 
-    public Mono<String> createAgendaItem(AgendaItem agendaItem)  {
+    public String createAgendaItem(AgendaItem agendaItem)  {
         log.info("> New Agenda Item Received: " + agendaItem);
         if (Pattern.compile(Pattern.quote("fail"), Pattern.CASE_INSENSITIVE).matcher(agendaItem.getTitle()).find()) {
             log.error(">> Something went wrong, it seems on purpose :)");
             throw new IllegalStateException("Something went wrong with adding the Agenda Item: " + agendaItem);
         }
 
-        return agendaItemRepository.save(agendaItem)
-                .doOnSuccess(savedAgendaItem -> {
-                    log.info("> Agenda Item Added to Agenda: {}", savedAgendaItem);
-                    log.info("\t eventsEnabled: " + eventsEnabled);
-                    if(eventsEnabled) {
-                        emitCloudEventForAgendaItemAdded(savedAgendaItem);
-                    }
-                })
-                .doOnError(i -> log.error(">> Agenda Item NOT Added to Agenda: {}", i))
-                .map(i -> !Strings.isBlank(i.getId()) ? "Agenda Item Added to Agenda" : "Agenda Item Not Added");
+        AgendaItem savedAgendaItem = agendaItemRepository.save(agendaItem);
+
+        log.info("> Agenda Item Added to Agenda: {}", savedAgendaItem);
+        log.info("\t eventsEnabled: " + eventsEnabled);
+
+        if(eventsEnabled) {
+            emitCloudEventForAgendaItemAdded(savedAgendaItem);
+        }
+
+        return "Agenda Item Added to Agenda";
 
     }
 
@@ -82,19 +81,19 @@ public class AgendaItemService {
                 .withDataContentType("application/json")
                 .withSubject(agendaItem.getTitle());
 
-        CloudEvent zeebeCloudEvent = ZeebeCloudEventsHelper
-                .buildZeebeCloudEvent(cloudEventBuilder)
-                .withCorrelationKey(proposal.getId()).build();
+//        CloudEvent zeebeCloudEvent = ZeebeCloudEventsHelper
+//                .buildZeebeCloudEvent(cloudEventBuilder)
+//                .withCorrelationKey(proposal.getId()).build();
+//
+//        logCloudEvent(zeebeCloudEvent);
+//        WebClient webClient = WebClient.builder().baseUrl(K_SINK).filter(logRequest()).build();
 
-        logCloudEvent(zeebeCloudEvent);
-        WebClient webClient = WebClient.builder().baseUrl(K_SINK).filter(logRequest()).build();
+//        WebClient.ResponseSpec postCloudEvent = CloudEventsHelper.createPostCloudEvent(webClient, zeebeCloudEvent);
 
-        WebClient.ResponseSpec postCloudEvent = CloudEventsHelper.createPostCloudEvent(webClient, zeebeCloudEvent);
-
-        postCloudEvent.bodyToMono(String.class)
-                .doOnError(t -> t.printStackTrace())
-                .doOnSuccess(s -> log.info("Cloud Event Posted to K_SINK -> " + K_SINK + ": Result: " +  s))
-                .subscribe();
+//        postCloudEvent.bodyToMono(String.class)
+//                .doOnError(t -> t.printStackTrace())
+//                .doOnSuccess(s -> log.info("Cloud Event Posted to K_SINK -> " + K_SINK + ": Result: " +  s))
+//                .subscribe();
     }
 
     private void logCloudEvent(CloudEvent cloudEvent) {
