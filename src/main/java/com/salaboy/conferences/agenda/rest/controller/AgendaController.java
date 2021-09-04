@@ -1,16 +1,17 @@
 package com.salaboy.conferences.agenda.rest.controller;
 
+
+
 import com.salaboy.conferences.agenda.rest.model.AgendaItem;
 import com.salaboy.conferences.agenda.rest.repository.AgendaItemRepository;
 import com.salaboy.conferences.agenda.rest.service.AgendaItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -38,6 +39,19 @@ public class AgendaController {
     public Iterable<AgendaItem> getAll() {
         log.info("> REST ENDPOINT INVOKED for Getting All Agenda Items");
         return agendaItemRepository.findAll();
+    }
+
+    @GetMapping("/highlights")
+    public Iterable<AgendaItem> getHighlights() {
+        List<AgendaItem> highlights = new ArrayList<>();
+        Iterable<AgendaItem> all = agendaItemRepository.findAll();
+        all.forEach(highlights::add);
+        Collections.shuffle(highlights);
+        if( highlights.size() > 4) {
+            return highlights.subList(0, 3);
+        }else{
+            return highlights;
+        }
     }
 
     @GetMapping("/day/{day}")
