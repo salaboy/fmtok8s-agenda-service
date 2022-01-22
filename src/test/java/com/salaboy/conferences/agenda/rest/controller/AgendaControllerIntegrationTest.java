@@ -4,24 +4,20 @@ import com.salaboy.conferences.agenda.rest.AgendaServiceApplication;
 import com.salaboy.conferences.agenda.rest.model.AgendaItem;
 import com.salaboy.conferences.agenda.rest.repository.AgendaItemRepository;
 import com.salaboy.conferences.agenda.rest.util.AgendaItemCreator;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration(classes = AgendaServiceApplication.class)
-@RunWith(SpringRunner.class)
 @AutoConfigureWebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("dev")

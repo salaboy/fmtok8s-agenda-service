@@ -2,9 +2,7 @@ package com.salaboy.conferences.agenda.rest.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.salaboy.conferences.agenda.rest.model.AgendaItem;
-import com.salaboy.conferences.agenda.rest.model.Proposal;
 import com.salaboy.conferences.agenda.rest.repository.AgendaItemRepository;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
@@ -12,16 +10,20 @@ import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.jackson.JsonFormat;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.codec.CodecCustomizer;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.codec.CodecConfigurer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import io.cloudevents.spring.webflux.CloudEventHttpMessageReader;
+import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
 
 import java.net.URI;
-import java.time.OffsetDateTime;
-import java.util.Date;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -32,6 +34,9 @@ public class AgendaItemService {
     @Value("${EVENTS_ENABLED:false}")
     private Boolean eventsEnabled;
 
+    @Autowired
+    private WebClient.Builder rest;
+
     @Value("${K_SINK:http://broker-ingress.knative-eventing.svc.cluster.local/default/default}")
     private String K_SINK;
 
@@ -39,11 +44,22 @@ public class AgendaItemService {
 
     private final AgendaItemRepository agendaItemRepository;
 
+    @Configuration
+    public static class CloudEventHandlerConfiguration implements CodecCustomizer {
+
+        @Override
+        public void customize(CodecConfigurer configurer) {
+            configurer.customCodecs().register(new CloudEventHttpMessageReader());
+            configurer.customCodecs().register(new CloudEventHttpMessageWriter());
+        }
+
+    }
+
     public AgendaItemService(AgendaItemRepository agendaItemRepository) {
         this.agendaItemRepository = agendaItemRepository;
     }
 
-    public String createAgendaItem(AgendaItem agendaItem)  {
+    public String createAgendaItem(AgendaItem agendaItem) {
         log.info("> New Agenda Item Received: " + agendaItem);
         if (Pattern.compile(Pattern.quote("fail"), Pattern.CASE_INSENSITIVE).matcher(agendaItem.getTitle()).find()) {
             log.error(">> Something went wrong, it seems on purpose :)");
@@ -56,44 +72,41 @@ public class AgendaItemService {
         log.info("\t eventsEnabled: " + eventsEnabled);
 
         if(eventsEnabled) {
-            emitCloudEventForAgendaItemAdded(savedAgendaItem);
+            try {
+                emitCloudEventForAgendaItemAdded(savedAgendaItem);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         }
 
         return "Agenda Item Added to Agenda";
 
     }
 
-    private void emitCloudEventForAgendaItemAdded(AgendaItem agendaItem) {
-        Proposal proposal = new Proposal(agendaItem.getProposalId(), agendaItem.getAuthor(), agendaItem.getTitle(), new Date());
-        String proposalString = null;
-        try {
-            proposalString = objectMapper.writeValueAsString(proposal);
-            proposalString = objectMapper.writeValueAsString(proposalString); //needs double quoted ??
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+    private void emitCloudEventForAgendaItemAdded(AgendaItem agendaItem) throws JsonProcessingException {
+        // Why I was sending a Proposal instead of an AgendaItem
+        //Proposal proposal = new Proposal(agendaItem.getProposalId(), agendaItem.getAuthor(), agendaItem.getTitle(), new Date());
+
         CloudEventBuilder cloudEventBuilder = CloudEventBuilder.v1()
                 .withId(UUID.randomUUID().toString())
-                .withTime(OffsetDateTime.now().toZonedDateTime()) // bug-> https://github.com/cloudevents/sdk-java/issues/200
                 .withType("Agenda.ItemCreated")
                 .withSource(URI.create("agenda-service.default.svc.cluster.local"))
-                .withData(proposalString.getBytes())
-                .withDataContentType("application/json")
+                .withData(objectMapper.writeValueAsString(agendaItem).getBytes(StandardCharsets.UTF_8))
+                .withDataContentType("application/json; charset=UTF-8")
                 .withSubject(agendaItem.getTitle());
 
-//        CloudEvent zeebeCloudEvent = ZeebeCloudEventsHelper
-//                .buildZeebeCloudEvent(cloudEventBuilder)
-//                .withCorrelationKey(proposal.getId()).build();
-//
-//        logCloudEvent(zeebeCloudEvent);
-//        WebClient webClient = WebClient.builder().baseUrl(K_SINK).filter(logRequest()).build();
+        CloudEvent cloudEvent = cloudEventBuilder.build();
 
-//        WebClient.ResponseSpec postCloudEvent = CloudEventsHelper.createPostCloudEvent(webClient, zeebeCloudEvent);
+        logCloudEvent(cloudEvent);
 
-//        postCloudEvent.bodyToMono(String.class)
-//                .doOnError(t -> t.printStackTrace())
-//                .doOnSuccess(s -> log.info("Cloud Event Posted to K_SINK -> " + K_SINK + ": Result: " +  s))
-//                .subscribe();
+        log.info("Producing CloudEvent with AgendaItem: " + agendaItem);
+
+        rest.baseUrl(K_SINK).filter(logRequest()).build()
+                .post().bodyValue(cloudEvent)
+                .retrieve()
+                .bodyToMono(String.class)
+                .doOnError(t -> t.printStackTrace())
+                .doOnSuccess(s -> log.info("Result -> " + s)).subscribe();
     }
 
     private void logCloudEvent(CloudEvent cloudEvent) {

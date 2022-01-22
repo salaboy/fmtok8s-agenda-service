@@ -2,6 +2,7 @@ package com.salaboy.conferences.agenda.rest.controller;
 
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.salaboy.conferences.agenda.rest.model.AgendaItem;
 import com.salaboy.conferences.agenda.rest.repository.AgendaItemRepository;
 import com.salaboy.conferences.agenda.rest.service.AgendaItemService;
