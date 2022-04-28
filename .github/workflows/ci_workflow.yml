@@ -52,6 +52,7 @@ jobs:
         with:
           java-version: 11
           distribution: adopt
+          cache: maven
 
       # Build application [BUILD]
       - name: Build application
