@@ -42,6 +42,7 @@ jobs:
       # This action is used with Docker Build Push action to tag and label Docker images.
       - name: Set up Docker Meta
         id: docker_meta
+        uses: docker/metadata-action@v3
         with:
           images: |
             ghcr.io/${{ github.repository }}
@@ -54,6 +55,7 @@ jobs:
       # Login to Github Container Registry [AUTH] https://github.com/docker/login-action
       # GitHub Action to login against a Docker registry.
       - name: Login to Gitub Container Registry
+        uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ env.OWNER }}
@@ -88,6 +90,7 @@ jobs:
       # Release Helm Chart [BUILD, PUBLISH] https://github.com/stefanprodan/helm-gh-pages
       # A GitHub Action for publishing Helm charts with Github Pages.
       - name: Release Helm Chart
+        uses: stefanprodan/helm-gh-pages@master
         with:
           charts_dir: helm
           # It needs to be added on Github repository 
