@@ -16,31 +16,20 @@ jobs:
       # It shows what branch or tag name that triggered the workflow run. 
       - name: Info
         run: echo "Building ${{ github.repository }} application, branch/tag ${{ github.ref_name}}"
+
       # Set up QEMU [SETUP] https://github.com/docker/setup-qemu-action
       # GitHub Action to install QEMU static binaries 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
+
       # Set up Docker Buildx [SETUP] https://github.com/docker/setup-buildx-action
       # GitHub Action to set up Docker Buildx.
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-      # Set up JDK 11 [SETUP] https://github.com/actions/setup-java
-      # Github Action to set up JDK 11
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: 11
-          distribution: adopt
 
-      # Build application [BUILD]
-      - name: Build application
-        run: |
-          ls -a
-          mvn package
-      
       # Set up Docker Meta [UTIL] https://github.com/docker/metadata-action
-      # GitHub Action to extract metadata from Git reference and GitHub events. 
+      # GitHub Action to extract metadata from Git reference and GitHub events.
       # This action is used with Docker Build Push action to tag and label Docker images.
       - name: Set up Docker Meta
         id: docker_meta
@@ -54,6 +43,19 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr,
             type=semver,pattern={{raw}}
+
+      # Set up JDK 11 [SETUP] https://github.com/actions/setup-java
+      # Github Action to set up JDK 11
+      - uses: actions/setup-java@v2
+      - name: Set up JDK 11
+        with:
+          java-version: 11
+          distribution: adopt
+
+      # Build application [BUILD]
+      - name: Build application
+        run: mvn package
+
       # Login to Github Container Registry [AUTH] https://github.com/docker/login-action
       # GitHub Action to login against a Docker registry.
       - name: Login to Gitub Container Registry
