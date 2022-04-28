@@ -35,7 +35,9 @@ jobs:
 
       # Build application [BUILD]
       - name: Build application
-        run: mvn package
+        run: |
+          ls -a
+          mvn package
       
       # Set up Docker Meta [UTIL] https://github.com/docker/metadata-action
       # GitHub Action to extract metadata from Git reference and GitHub events. 
