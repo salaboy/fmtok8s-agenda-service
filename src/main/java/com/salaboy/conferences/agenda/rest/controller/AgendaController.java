@@ -1,15 +1,18 @@
 package com.salaboy.conferences.agenda.rest.controller;
 
+
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.salaboy.conferences.agenda.rest.model.AgendaItem;
 import com.salaboy.conferences.agenda.rest.repository.AgendaItemRepository;
 import com.salaboy.conferences.agenda.rest.service.AgendaItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -28,33 +31,46 @@ public class AgendaController {
     }
 
     @PostMapping
-    public Mono<String> newAgendaItem(@RequestBody AgendaItem agendaItem) {
+    public String newAgendaItem(@RequestBody AgendaItem agendaItem) {
         log.info("> REST ENDPOINT INVOKED for Creating a new Agenda Item");
         return agendaItemService.createAgendaItem(agendaItem);
     }
 
     @GetMapping
-    public Flux<AgendaItem> getAll() {
+    public Iterable<AgendaItem> getAll() {
         log.info("> REST ENDPOINT INVOKED for Getting All Agenda Items");
         return agendaItemRepository.findAll();
     }
 
+    @GetMapping("/highlights")
+    public Iterable<AgendaItem> getHighlights() {
+        List<AgendaItem> highlights = new ArrayList<>();
+        Iterable<AgendaItem> all = agendaItemRepository.findAll();
+        all.forEach(highlights::add);
+        Collections.shuffle(highlights);
+        if( highlights.size() > 4) {
+            return highlights.subList(0, 3);
+        }else{
+            return highlights;
+        }
+    }
+
     @GetMapping("/day/{day}")
-    public Mono<Set<AgendaItem>> getAllByDay(@PathVariable(value = "day", required = true) final String day) {
+    public Iterable<AgendaItem> getAllByDay(@PathVariable(value = "day", required = true) final String day) {
         log.info("> REST ENDPOINT INVOKED for Getting Agenda Items by Day: " + day);
-        return agendaItemRepository.findAllByDay(day).collect(Collectors.toSet());
+        return agendaItemRepository.findAllByDay(day);
     }
 
     @GetMapping("/{id}")
-    public Mono<AgendaItem> getById(@PathVariable("id") String id) {
+    public Optional<AgendaItem> getById(@PathVariable("id") String id) {
         log.info("> REST ENDPOINT INVOKED for Getting Agenda Item by Id: " + id);
         return agendaItemRepository.findById(id);
     }
 
     @DeleteMapping("/")
-    public Mono<Void> clearAgendaItems() {
+    public void clearAgendaItems() {
         log.info("> Deleting all Agenda Items");
-        return agendaItemRepository.deleteAll();
+        agendaItemRepository.deleteAll();
     }
 
 }

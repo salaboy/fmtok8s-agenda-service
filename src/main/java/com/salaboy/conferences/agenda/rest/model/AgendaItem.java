@@ -1,18 +1,21 @@
 package com.salaboy.conferences.agenda.rest.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import java.util.Objects;
 
-@Document
+@RedisHash("AgendaItem")
 public class AgendaItem {
 
     @Id
+    @Indexed
     private String id;
     private String proposalId;
     private String title;
     private String author;
+    @Indexed
     private String day;
     private String time;
 
