@@ -56,7 +56,7 @@ jobs:
 
       # Build application [BUILD]
       - name: Build application
-        run: mvn package
+        run: mvn package -DskipTests
 
       # Login to Github Container Registry [AUTH] https://github.com/docker/login-action
       # GitHub Action to login against a Docker registry.
