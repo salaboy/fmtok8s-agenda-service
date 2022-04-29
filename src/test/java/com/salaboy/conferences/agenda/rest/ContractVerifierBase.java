@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {"server.port=0"})
+        properties = "server.port=0")
 @ActiveProfiles("dev")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class ContractVerifierBase {
