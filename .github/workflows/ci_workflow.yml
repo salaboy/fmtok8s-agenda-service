@@ -45,7 +45,7 @@ jobs:
             type=semver,pattern={{raw}}
 
       - name: Docker Meta Output
-        run: echo "Docker meta tags $${{ steps.docker_meta.outputs.tags }}"
+        run: echo "Docker meta tags ${{ steps.docker_meta.outputs.tags }}"
 
       # Login to Github Container Registry [AUTH] https://github.com/docker/login-action
       # GitHub Action to login against a Docker registry.
@@ -57,6 +57,9 @@ jobs:
           # It needs to be added on Github repository
           # https://github.com/salaboy/fmtok8s-agenda-rest/settings/secrets/actions
           password: ${{ secrets.PACKAGE_TOKEN }}
+    outputs:
+      docker_tags: ${{ steps.docker_meta.outputs.tags }}
+      docker_labels: ${{ steps.docker_meta.outputs.labels }}
   build:
     needs: [setup]
     runs-on: ubuntu-20.04
@@ -85,8 +88,8 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ needs.setup.steps.docker_meta.outputs.tags }}
-          labels: ${{ needs.setup.docker_meta.outputs.labels }}
+          tags: ${{ needs.setup.outputs.docker_tags }}
+          labels: ${{ needs.setup.outputs.docker_labels }}
   native:
     runs-on: ubuntu-20.04
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -102,9 +105,9 @@ jobs:
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build native image
-        run: mvn spring-boot:build-image -Dspring-boot.build-image.imageName=${{ needs.setup.docker_meta.outputs.tags }}-native
+        run: mvn spring-boot:build-image -Dspring-boot.build-image.imageName=${{ needs.setup.outputs.docker_tags }}-native
       - name: Publish native image
-        run: docker push ${{ needs.setup.docker_meta.outputs.tags }}-native
+        run: docker push ${{ needs.setup.outputs.docker_tags }}-native
   chart_releaser:
     runs-on: ubuntu-20.04
     needs: [setup, build]
