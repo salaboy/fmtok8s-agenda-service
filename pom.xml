@@ -20,7 +20,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <cloudevents.version>2.3.0</cloudevents.version>
-        <spring-cloud.version>2021.0.2</spring-cloud.version>
+        <spring-cloud.version>2021.0.1</spring-cloud.version>
         <springdoc-openapi-ui.version>1.2.32</springdoc-openapi-ui.version>
     </properties>
     <dependencyManagement>
@@ -36,87 +36,101 @@
     </dependencyManagement>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>de.flapdoodle.embed</groupId>-->
-<!--            <artifactId>de.flapdoodle.embed.mongo</artifactId>-->
-<!--            <version>2.2.0</version>-->
-<!--        </dependency>-->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>-->
-<!--        </dependency>-->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.micrometer</groupId>
+                    <artifactId>micrometer-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-webflux-ui</artifactId>
             <version>${springdoc-openapi-ui.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>io.cloudevents</groupId>
             <artifactId>cloudevents-spring</artifactId>
             <version>${cloudevents.version}</version>
         </dependency>
+
         <dependency>
             <groupId>io.cloudevents</groupId>
             <artifactId>cloudevents-http-basic</artifactId>
             <version>${cloudevents.version}</version>
         </dependency>
+
         <dependency>
             <groupId>io.cloudevents</groupId>
             <artifactId>cloudevents-json-jackson</artifactId>
             <version>${cloudevents.version}</version>
         </dependency>
+
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-jose</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-resource-server</artifactId>
         </dependency>
+
         <dependency>
             <groupId>io.opentracing.contrib</groupId>
             <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
             <version>3.2.2</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>it.ozimov</groupId>
             <artifactId>embedded-redis</artifactId>
             <version>0.7.2</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-contract-verifier</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.experimental</groupId>
+            <artifactId>spring-native</artifactId>
+            <version>0.11.4</version>
         </dependency>
     </dependencies>
 
@@ -145,7 +159,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <finalName>app</finalName>
                     <profiles>
                         <profile>dev</profile>
                     </profiles>
@@ -183,6 +196,46 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.springframework.experimental</groupId>
+                <artifactId>spring-aot-maven-plugin</artifactId>
+                <version>0.11.4</version>
+                <executions>
+                    <execution>
+                        <id>generate</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <builder>paketobuildpacks/builder:tiny</builder>
+                        <env>
+                            <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+                        </env>
+                    </image>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- ... -->
+                    <image>
+                        <buildpacks>
+                            <buildpack>gcr.io/paketo-buildpacks/java-native-image:7.1.0</buildpack>
+                        </buildpacks>
+                    </image>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -191,5 +244,18 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>spring-release</id>
+            <name>Spring release</name>
+            <url>https://repo.spring.io/release</url>
+        </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-release</id>
+            <name>Spring release</name>
+            <url>https://repo.spring.io/release</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
