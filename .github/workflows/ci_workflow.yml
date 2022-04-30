@@ -44,7 +44,7 @@ jobs:
             type=ref,event=pr,
             type=semver,pattern={{raw}}
 
-      # Checkout and Set up JDK 11 [CHECKOUT, SETUP] https://github.com/actions/setup-java
+      # Checkout and Set up GraalVM 22.1.0 with JDK 11 [CHECKOUT, SETUP] https://github.com/actions/setup-java
       # Github Action to set up JDK 11
       - name: Checkout and Set up GraalVM 22.1.0
         uses: actions/checkout@v3
