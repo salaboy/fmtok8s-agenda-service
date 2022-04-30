@@ -120,5 +120,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build, unit tests and integration tests (native)
         run: |
-          chmod +x mvnw
-          ./mvnw spring-boot:build-image
+          mvn spring-boot:build-image
