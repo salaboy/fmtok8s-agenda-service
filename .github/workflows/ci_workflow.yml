@@ -56,7 +56,7 @@ jobs:
 
       # Build application [BUILD]
       - name: Build application
-        run: mvn package -DskipTests
+        run: mvn package
 
       # Login to Github Container Registry [AUTH] https://github.com/docker/login-action
       # GitHub Action to login against a Docker registry.
@@ -105,10 +105,19 @@ jobs:
           repository: helm
           branch: ${{ env.GH_PAGES_BRANCH_NAME }}
           owner: ${{ env.OWNER }}
-
-
-          
-
-
-
-    
+  Native:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Set up GraalVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          version: '22.1.0'
+          java-version: '11'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build, unit tests and integration tests (native)
+        run: |
+          chmod +x mvnw
+          ./mvnw spring-boot:build-image
