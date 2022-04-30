@@ -101,7 +101,7 @@ jobs:
           labels: ${{ needs.setup.outputs.docker_labels }}
   build_publish_native:
     runs-on: ubuntu-20.04
-    if: ${{ github.ref != 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
     needs: [setup, build]
     steps:
       - name: Checkout
