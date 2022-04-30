@@ -65,11 +65,12 @@ jobs:
 
       - name: Build application
         run: mvn package
-      - name: Upload math result for job 1
+
+      - name: Upload app.jar
         uses: actions/upload-artifact@v3
         with:
           name: app-jar
-          path: /target/app.jar
+          path: target/app.jar
   publish:
     needs: [setup, build]
     runs-on: ubuntu-20.04
