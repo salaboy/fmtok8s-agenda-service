@@ -85,14 +85,16 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.docker_meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
+          tags: ${{ needs.setup.steps.docker_meta.outputs.tags }}
+          labels: ${{ needs.setup.docker_meta.outputs.labels }}
   native:
     runs-on: ubuntu-20.04
     if: ${{ github.ref == 'refs/heads/main' }}
     needs: [setup, build]
     steps:
-      - name: Set up GraalVM
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up GraalVM 22.1.0
         uses: graalvm/setup-graalvm@v1
         with:
           version: '22.1.0'
@@ -107,6 +109,8 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [setup, build]
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       # Change Chart.yml [UTIL] https://github.com/fjogeleit/yaml-update-action
       # Github Action to change a local YAML file without commiting the change.
       - name: Change Chart.yml
