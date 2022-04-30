@@ -164,6 +164,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <finalName>app</finalName>
                     <profiles>
                         <profile>dev</profile>
                     </profiles>
