@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping
@@ -23,13 +24,13 @@ public class InfoController {
     private String podNamespace;
 
     @GetMapping("/info")
-    public ServiceInfo getInfo() {
-        return new ServiceInfo(
+    public Mono<ServiceInfo> getInfo() {
+        return Mono.just(new ServiceInfo(
                 "Agenda Service (REST)",
                 "v"+version,
                 "https://github.com/salaboy/fmtok8s-agenda-rest/releases/tag/v" + version,
                 podId,
                 podNamespace,
-                podNodeName);
+                podNodeName));
     }
 }
