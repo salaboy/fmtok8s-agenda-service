@@ -2,6 +2,7 @@ package com.salaboy.conferences.agenda.rest;
 
 import com.salaboy.conferences.agenda.rest.repository.AgendaItemRepository;
 import io.restassured.RestAssured;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.MockitoAnnotations;
@@ -15,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
         properties = "server.port=0")
 @ActiveProfiles("dev")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Slf4j
 public abstract class ContractVerifierBase {
 
     @LocalServerPort
@@ -25,6 +27,7 @@ public abstract class ContractVerifierBase {
 
     @BeforeAll
     public void setup() {
+        log.info("Setup ContractVerifierBase");
         MockitoAnnotations.openMocks(this);
         RestAssured.baseURI = "http://localhost:" + this.port;
     }

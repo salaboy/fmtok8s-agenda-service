@@ -9,6 +9,8 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.jackson.JsonFormat;
+import io.cloudevents.spring.webflux.CloudEventHttpMessageReader;
+import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import io.cloudevents.spring.webflux.CloudEventHttpMessageReader;
-import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -59,7 +59,7 @@ public class AgendaItemService {
         this.agendaItemRepository = agendaItemRepository;
     }
 
-    public String createAgendaItem(AgendaItem agendaItem) {
+    public Mono<String> createAgendaItem(AgendaItem agendaItem) {
         log.info("> New Agenda Item Received: " + agendaItem);
         if (Pattern.compile(Pattern.quote("fail"), Pattern.CASE_INSENSITIVE).matcher(agendaItem.getTitle()).find()) {
             log.error(">> Something went wrong, it seems on purpose :)");
@@ -79,7 +79,7 @@ public class AgendaItemService {
             }
         }
 
-        return "Agenda Item Added to Agenda";
+        return Mono.just("Agenda Item Added to Agenda");
 
     }
 
