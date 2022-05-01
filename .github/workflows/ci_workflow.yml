@@ -48,8 +48,9 @@ jobs:
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
-          java-version: 11
-          distribution: adopt
+          java-version: 17
+          distribution: temurin
+          cache: 'maven'
       - name: Build application
         run: mvn package
       - name: Upload app.jar
@@ -108,7 +109,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           version: '22.1.0'
-          java-version: '11'
+          java-version: '17'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build native image
