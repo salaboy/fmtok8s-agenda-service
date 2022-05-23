@@ -63,57 +63,57 @@ jobs:
 #          run: |
 #            chmod +x mvnw
 #            ./mvnw spring-boot:build-image
-    package:
-      name: Package and Publish
-      if: ${{ github.ref == 'refs/heads/main' }}
-      needs: [ build ]
-      runs-on: ubuntu-20.04
-      permissions:
-        contents: read
-        packages: write
-        security-events: write
-      steps:
-        - name: Checkout source code
-          uses: actions/checkout@v2
-        - name: Set up JDK
-          uses: actions/setup-java@v2
-          with:
-            distribution: temurin
-            java-version: 17
-            cache: maven
-        - name: Package application as JAR
-          run: |
-            chmod +x mvnw
-            ./mvnw package
-        - name: Log into container registry
-          uses: docker/login-action@v1
-          with:
-            registry: ${{ env.REGISTRY }}
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
-        - name: Build container image
-          run: |
-            docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} .
-        - name: OCI image vulnerability scanning
-          uses: anchore/scan-action@v3
-          id: scan
-          with:
-            image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-            fail-build: false
-            severity-cutoff: medium
-            acs-report-enable: true
-        - name: Upload vulnerability report
-          uses: github/codeql-action/upload-sarif@v2
-          if: success() || failure()
-          with:
-            sarif_file: ${{ steps.scan.outputs.sarif }}
-        - name: Publish container image
-          run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-        - name: Publish container image (latest)
-          run: |
-            docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+  package:
+    name: Package and Publish
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: [ build ]
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: read
+      packages: write
+      security-events: write
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+      - name: Package application as JAR
+        run: |
+          chmod +x mvnw
+          ./mvnw package
+      - name: Log into container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build container image
+        run: |
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} .
+      - name: OCI image vulnerability scanning
+        uses: anchore/scan-action@v3
+        id: scan
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          fail-build: false
+          severity-cutoff: medium
+          acs-report-enable: true
+      - name: Upload vulnerability report
+        uses: github/codeql-action/upload-sarif@v2
+        if: success() || failure()
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
+      - name: Publish container image
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+      - name: Publish container image (latest)
+        run: |
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
   publish_chart:
     runs-on: ubuntu-20.04
     needs: [build, package]
