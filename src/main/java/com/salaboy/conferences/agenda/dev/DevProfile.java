@@ -1,4 +1,4 @@
-package com.salaboy.conferences.agenda.rest.dev;
+package com.salaboy.conferences.agenda.dev;
 
 import io.opentracing.contrib.java.spring.jaeger.starter.JaegerAutoConfiguration;
 

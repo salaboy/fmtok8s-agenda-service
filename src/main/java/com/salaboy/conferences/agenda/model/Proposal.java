@@ -1,4 +1,4 @@
-package com.salaboy.conferences.agenda.rest.model;
+package com.salaboy.conferences.agenda.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -9,16 +9,14 @@ public class Proposal {
     private String id;
     private String author;
     private String title;
-    private Date talkTime;
 
     public Proposal() {
     }
 
-    public Proposal(String id, String author, String title, Date talkTime) {
+    public Proposal(String id, String author, String title) {
         this.id = id;
         this.author = author;
         this.title = title;
-        this.talkTime = talkTime;
     }
 
     public String getId() {
@@ -45,21 +43,12 @@ public class Proposal {
         this.title = title;
     }
 
-    public Date getTalkTime() {
-        return talkTime;
-    }
-
-    public void setTalkTime(Date talkTime) {
-        this.talkTime = talkTime;
-    }
-
     @Override
     public String toString() {
         return "Proposal{" +
                 "id='" + id + '\'' +
                 ", author='" + author + '\'' +
                 ", title='" + title + '\'' +
-                ", talkTime=" + talkTime +
                 '}';
     }
 }

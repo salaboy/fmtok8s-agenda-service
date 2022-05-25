@@ -1,4 +1,4 @@
-package com.salaboy.conferences.agenda.rest.model;
+package com.salaboy.conferences.agenda.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
@@ -12,7 +12,7 @@ public class AgendaItem {
     @Id
     @Indexed
     private String id;
-    private String proposalId;
+    private Proposal proposal;
     private String title;
     private String author;
     @Indexed
@@ -22,8 +22,8 @@ public class AgendaItem {
 
     protected AgendaItem() {}
 
-    public AgendaItem(String proposalId, String title, String author, String day, String time) {
-        this.proposalId = proposalId;
+    public AgendaItem(Proposal proposal, String title, String author, String day, String time) {
+        this.proposal = proposal;
         this.title = title;
         this.author = author;
         this.day = day;
@@ -71,19 +71,19 @@ public class AgendaItem {
         this.time = time;
     }
 
-    public String getProposalId() {
-        return proposalId;
+    public Proposal getProposal() {
+        return proposal;
     }
 
-    public void setProposalId(String proposalId) {
-        this.proposalId = proposalId;
+    public void setProposal(Proposal proposal) {
+        this.proposal = proposal;
     }
 
     @Override
     public String toString() {
         return "AgendaItem{" +
                 "id='" + id + '\'' +
-                ", proposalId='" + proposalId + '\'' +
+                ", proposal=" + proposal +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", day='" + day + '\'' +
@@ -91,21 +91,17 @@ public class AgendaItem {
                 '}';
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AgendaItem that = (AgendaItem) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(proposalId, that.proposalId) &&
-                Objects.equals(title, that.title) &&
-                Objects.equals(author, that.author) &&
-                Objects.equals(day, that.day) &&
-                Objects.equals(time, that.time);
+        return Objects.equals(id, that.id) && Objects.equals(proposal, that.proposal) && Objects.equals(title, that.title) && Objects.equals(author, that.author) && Objects.equals(day, that.day) && Objects.equals(time, that.time);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, proposalId, title, author, day, time);
+        return Objects.hash(id, proposal, title, author, day, time);
     }
 }

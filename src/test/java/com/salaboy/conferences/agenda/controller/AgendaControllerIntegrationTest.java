@@ -1,9 +1,9 @@
-package com.salaboy.conferences.agenda.rest.controller;
+package com.salaboy.conferences.agenda.controller;
 
-import com.salaboy.conferences.agenda.rest.AgendaServiceApplication;
-import com.salaboy.conferences.agenda.rest.model.AgendaItem;
-import com.salaboy.conferences.agenda.rest.repository.AgendaItemRepository;
-import com.salaboy.conferences.agenda.rest.util.AgendaItemCreator;
+import com.salaboy.conferences.agenda.AgendaServiceApplication;
+import com.salaboy.conferences.agenda.repository.AgendaItemRepository;
+import com.salaboy.conferences.agenda.model.AgendaItem;
+import com.salaboy.conferences.agenda.util.AgendaItemCreator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.salaboy.conferences.agenda.rest.security;
+package com.salaboy.conferences.agenda.security;
 
 
 import org.springframework.context.annotation.Bean;

@@ -1,6 +1,6 @@
-package com.salaboy.conferences.agenda.rest;
+package com.salaboy.conferences.agenda;
 
-import com.salaboy.conferences.agenda.rest.repository.AgendaItemRepository;
+import com.salaboy.conferences.agenda.repository.AgendaItemRepository;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;

@@ -1,4 +1,4 @@
-package com.salaboy.conferences.agenda.rest.service;
+package com.salaboy.conferences.agenda.service;
 
 import org.junit.jupiter.api.Test;
 

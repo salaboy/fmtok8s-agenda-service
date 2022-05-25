@@ -1,4 +1,4 @@
-package com.salaboy.conferences.agenda.rest;
+package com.salaboy.conferences.agenda;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

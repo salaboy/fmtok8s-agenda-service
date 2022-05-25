@@ -1,4 +1,4 @@
-package com.salaboy.conferences.agenda.rest.security;
+package com.salaboy.conferences.agenda.security;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.reactive.config.CorsRegistry;

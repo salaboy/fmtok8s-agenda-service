@@ -1,9 +1,9 @@
-package com.salaboy.conferences.agenda.rest.service;
+package com.salaboy.conferences.agenda.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.salaboy.conferences.agenda.rest.model.AgendaItem;
-import com.salaboy.conferences.agenda.rest.repository.AgendaItemRepository;
+import com.salaboy.conferences.agenda.model.AgendaItem;
+import com.salaboy.conferences.agenda.repository.AgendaItemRepository;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventFormat;
@@ -84,8 +84,6 @@ public class AgendaItemService {
     }
 
     private void emitCloudEventForAgendaItemAdded(AgendaItem agendaItem) throws JsonProcessingException {
-        // Why I was sending a Proposal instead of an AgendaItem
-        //Proposal proposal = new Proposal(agendaItem.getProposalId(), agendaItem.getAuthor(), agendaItem.getTitle(), new Date());
 
         CloudEventBuilder cloudEventBuilder = CloudEventBuilder.v1()
                 .withId(UUID.randomUUID().toString())

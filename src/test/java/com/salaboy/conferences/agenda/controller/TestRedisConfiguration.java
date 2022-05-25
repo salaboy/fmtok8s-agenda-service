@@ -1,8 +1,8 @@
-package com.salaboy.conferences.agenda.rest.controller;
+package com.salaboy.conferences.agenda.controller;
 
 
 
-import com.salaboy.conferences.agenda.rest.RedisProperties;
+import com.salaboy.conferences.agenda.RedisProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import redis.embedded.RedisServer;
 

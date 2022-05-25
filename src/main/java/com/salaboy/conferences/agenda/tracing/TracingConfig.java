@@ -1,4 +1,4 @@
-package com.salaboy.conferences.agenda.rest.tracing;
+package com.salaboy.conferences.agenda.tracing;
 
 import io.opentracing.Tracer;
 import io.opentracing.contrib.spring.web.client.TracingExchangeFilterFunction;

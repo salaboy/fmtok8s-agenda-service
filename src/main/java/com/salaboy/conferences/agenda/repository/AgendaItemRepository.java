@@ -1,6 +1,6 @@
-package com.salaboy.conferences.agenda.rest.repository;
+package com.salaboy.conferences.agenda.repository;
 
-import com.salaboy.conferences.agenda.rest.model.AgendaItem;
+import com.salaboy.conferences.agenda.model.AgendaItem;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

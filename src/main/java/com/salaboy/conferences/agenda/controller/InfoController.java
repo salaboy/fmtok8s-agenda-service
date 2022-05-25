@@ -1,6 +1,6 @@
-package com.salaboy.conferences.agenda.rest.controller;
+package com.salaboy.conferences.agenda.controller;
 
-import com.salaboy.conferences.agenda.rest.model.ServiceInfo;
+import com.salaboy.conferences.agenda.model.ServiceInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

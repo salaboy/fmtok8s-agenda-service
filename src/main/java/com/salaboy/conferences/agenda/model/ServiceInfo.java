@@ -1,4 +1,4 @@
-package com.salaboy.conferences.agenda.rest.model;
+package com.salaboy.conferences.agenda.model;
 
 public class ServiceInfo {
     private String name;

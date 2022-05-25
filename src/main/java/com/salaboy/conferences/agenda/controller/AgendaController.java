@@ -1,11 +1,10 @@
-package com.salaboy.conferences.agenda.rest.controller;
+package com.salaboy.conferences.agenda.controller;
 
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.salaboy.conferences.agenda.rest.model.AgendaItem;
-import com.salaboy.conferences.agenda.rest.repository.AgendaItemRepository;
-import com.salaboy.conferences.agenda.rest.service.AgendaItemService;
+import com.salaboy.conferences.agenda.repository.AgendaItemRepository;
+import com.salaboy.conferences.agenda.model.AgendaItem;
+import com.salaboy.conferences.agenda.service.AgendaItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
