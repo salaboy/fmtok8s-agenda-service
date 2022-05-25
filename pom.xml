@@ -11,8 +11,8 @@
     <groupId>com.salaboy.conferences</groupId>
     <artifactId>fmtok8s-agenda-rest</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>From Monolith to K8S :: Agenda Service (REST)</name>
-    <description>From Monolith to K8S :: Agenda Service (REST)</description>
+    <name>From Monolith to K8S :: Agenda Service</name>
+    <description>From Monolith to K8S :: Agenda Service</description>
 
     <properties>
         <java.version>17</java.version>
