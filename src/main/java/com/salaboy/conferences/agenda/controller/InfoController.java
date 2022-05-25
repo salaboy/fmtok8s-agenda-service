@@ -27,7 +27,7 @@ public class InfoController {
         return new ServiceInfo(
                 "Agenda Service",
                 "v"+version,
-                "https://github.com/salaboy/fmtok8s-agenda-rest/releases/tag/v" + version,
+                "https://github.com/salaboy/fmtok8s-agenda-service/releases/tag/v" + version,
                 podId,
                 podNamespace,
                 podNodeName);
