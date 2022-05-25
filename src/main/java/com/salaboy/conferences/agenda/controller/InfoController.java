@@ -25,7 +25,7 @@ public class InfoController {
     @GetMapping("/info")
     public ServiceInfo getInfo() {
         return new ServiceInfo(
-                "Agenda Service (REST)",
+                "Agenda Service",
                 "v"+version,
                 "https://github.com/salaboy/fmtok8s-agenda-rest/releases/tag/v" + version,
                 podId,

@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.salaboy.conferences</groupId>
-    <artifactId>fmtok8s-agenda-rest</artifactId>
+    <artifactId>fmtok8s-agenda-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>From Monolith to K8S :: Agenda Service</name>
     <description>From Monolith to K8S :: Agenda Service</description>
@@ -188,7 +188,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <testFramework>JUNIT5</testFramework>
-                    <packageWithBaseClasses>com.salaboy.conferences.agenda.rest</packageWithBaseClasses>
+                    <packageWithBaseClasses>com.salaboy.conferences.agenda</packageWithBaseClasses>
                     <testMode>EXPLICIT</testMode>
                 </configuration>
             </plugin>
