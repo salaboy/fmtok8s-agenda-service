@@ -113,7 +113,7 @@ jobs:
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build native image
-        run: export BP_NATIVE_IMAGE=true && mvn spring-boot:build-image --DskipTests -Dspring-boot.build-image.imageName=${{ needs.setup.outputs.docker_tags }}-native
+        run: export BP_NATIVE_IMAGE=true && mvn spring-boot:build-image -Dspring-boot.build-image.imageName=${{ needs.setup.outputs.docker_tags }}-native
       # Login to Github Container Registry [AUTH] https://github.com/docker/login-action
       # GitHub Action to login against a Docker registry.
       - name: Login to Github Container Registry
