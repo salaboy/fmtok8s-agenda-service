@@ -11,8 +11,8 @@ public class RedisProperties {
 
 
     public RedisProperties(
-            @Value("${spring.redis.port}") int redisPort,
-            @Value("${spring.redis.host}") String redisHost,
+            @Value("${spring.redis.port:6379}") int redisPort,
+            @Value("${spring.redis.host:localhost}") String redisHost,
             @Value("${spring.redis.password:}") String redisPassword) {
         this.redisPort = redisPort;
         this.redisHost = redisHost;
