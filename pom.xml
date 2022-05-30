@@ -19,7 +19,7 @@
         <cloudevents.version>2.3.0</cloudevents.version>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
         <spring-native.version>0.12.0-SNAPSHOT</spring-native.version>
-<!--        <springdoc-openapi-ui.version>1.2.32</springdoc-openapi-ui.version>-->
+        <!--        <springdoc-openapi-ui.version>1.2.32</springdoc-openapi-ui.version>-->
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -41,6 +41,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-bindings</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
@@ -56,11 +62,11 @@
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springdoc</groupId>-->
-<!--            <artifactId>springdoc-openapi-webflux-ui</artifactId>-->
-<!--            <version>${springdoc-openapi-ui.version}</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springdoc</groupId>-->
+        <!--            <artifactId>springdoc-openapi-webflux-ui</artifactId>-->
+        <!--            <version>${springdoc-openapi-ui.version}</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -106,11 +112,11 @@
             <artifactId>spring-security-oauth2-resource-server</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>io.opentracing.contrib</groupId>-->
-<!--            <artifactId>opentracing-spring-jaeger-web-starter</artifactId>-->
-<!--            <version>3.2.2</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>io.opentracing.contrib</groupId>-->
+        <!--            <artifactId>opentracing-spring-jaeger-web-starter</artifactId>-->
+        <!--            <version>3.2.2</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -262,6 +268,11 @@
             <releases>
                 <enabled>false</enabled>
             </releases>
+        </repository>
+        <repository>
+            <id>spring-release</id>
+            <name>Spring Release</name>
+            <url>https://repo.spring.io/release</url>
         </repository>
     </repositories>
     <pluginRepositories>
