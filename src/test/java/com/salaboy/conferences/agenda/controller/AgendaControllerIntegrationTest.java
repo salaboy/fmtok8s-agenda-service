@@ -1,6 +1,6 @@
 package com.salaboy.conferences.agenda.controller;
 
-import com.salaboy.conferences.agenda.AgendaServiceApplication;
+import com.salaboy.conferences.agenda.AgendaService;
 import com.salaboy.conferences.agenda.repository.AgendaItemRepository;
 import com.salaboy.conferences.agenda.model.AgendaItem;
 import com.salaboy.conferences.agenda.util.AgendaItemCreator;
@@ -17,7 +17,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ContextConfiguration(classes = AgendaServiceApplication.class)
+@ContextConfiguration(classes = AgendaService.class)
 @AutoConfigureWebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("dev")
