@@ -9,7 +9,10 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.jackson.JsonFormat;
-import lombok.extern.slf4j.Slf4j;
+import io.cloudevents.spring.webflux.CloudEventHttpMessageReader;
+import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.codec.CodecCustomizer;
@@ -19,8 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import io.cloudevents.spring.webflux.CloudEventHttpMessageReader;
-import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -28,13 +29,13 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Service
-@Slf4j
 public class AgendaItemService {
+
+    private static final Logger log = LoggerFactory.getLogger(AgendaItemService.class);
 
     @Value("${EVENTS_ENABLED:false}")
     private Boolean eventsEnabled;
 
-    @Autowired
     private WebClient.Builder rest;
 
     @Value("${K_SINK:http://broker-ingress.knative-eventing.svc.cluster.local/default/default}")
@@ -55,8 +56,9 @@ public class AgendaItemService {
 
     }
 
-    public AgendaItemService(AgendaItemRepository agendaItemRepository) {
+    public AgendaItemService(AgendaItemRepository agendaItemRepository, WebClient.Builder rest) {
         this.agendaItemRepository = agendaItemRepository;
+        this.rest = rest;
     }
 
     public String createAgendaItem(AgendaItem agendaItem) {

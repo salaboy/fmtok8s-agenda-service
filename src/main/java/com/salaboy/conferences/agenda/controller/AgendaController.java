@@ -1,22 +1,23 @@
 package com.salaboy.conferences.agenda.controller;
 
 
-
-import com.salaboy.conferences.agenda.repository.AgendaItemRepository;
 import com.salaboy.conferences.agenda.model.AgendaItem;
+import com.salaboy.conferences.agenda.repository.AgendaItemRepository;
 import com.salaboy.conferences.agenda.service.AgendaItemService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
 
 @RestController
-@Slf4j
 @RequestMapping
 public class AgendaController {
+
+    private static final Logger log = LoggerFactory.getLogger(AgendaController.class);
 
     private final AgendaItemRepository agendaItemRepository;
     private final AgendaItemService agendaItemService;
