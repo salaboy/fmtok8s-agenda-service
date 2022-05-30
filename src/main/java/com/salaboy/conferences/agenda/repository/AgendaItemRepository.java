@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AgendaItemRepository extends CrudRepository<AgendaItem, String> {
-
     Iterable<AgendaItem> findAllByDay(String day);
 }

@@ -18,7 +18,8 @@
         <java.version>17</java.version>
         <cloudevents.version>2.3.0</cloudevents.version>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
-        <spring-native.version>0.12.0-SNAPSHOT</spring-native.version>
+        <testcontainers.version>1.16.2</testcontainers.version>
+        <spring-native.version>0.11.4</spring-native.version>
         <!--        <springdoc-openapi-ui.version>1.2.32</springdoc-openapi-ui.version>-->
     </properties>
     <dependencyManagement>
@@ -27,6 +28,13 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${testcontainers.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -114,10 +122,20 @@
         </dependency>
 
         <dependency>
-            <groupId>it.ozimov</groupId>
-            <artifactId>embedded-redis</artifactId>
-            <version>0.7.2</version>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-bindings</artifactId>
+            <version>1.9.0</version>
         </dependency>
 
         <dependency>

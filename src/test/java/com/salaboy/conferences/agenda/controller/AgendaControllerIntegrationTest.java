@@ -1,46 +1,47 @@
 package com.salaboy.conferences.agenda.controller;
 
 import com.salaboy.conferences.agenda.AgendaService;
-import com.salaboy.conferences.agenda.repository.AgendaItemRepository;
 import com.salaboy.conferences.agenda.model.AgendaItem;
+import com.salaboy.conferences.agenda.repository.AgendaItemRepository;
 import com.salaboy.conferences.agenda.util.AgendaItemCreator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ContextConfiguration(classes = AgendaService.class)
-@AutoConfigureWebTestClient
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest(classes = AgendaService.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("dev")
-@SpringBootTest(classes = TestRedisConfiguration.class)
+@Testcontainers
 public class AgendaControllerIntegrationTest {
+
+    private static final int REDIS_PORT = 6379;
 
     @Autowired
     private WebTestClient webTestClient;
 
+    @Container
+    static GenericContainer<?> redis = new GenericContainer<>(DockerImageName.parse("redis:6.0"))
+            .withExposedPorts(REDIS_PORT);
+
     @Autowired
     private AgendaItemRepository agendaItemRepository;
 
-//    @Autowired
-//    private ReactiveMongoTemplate reactiveMongoTemplate;
-//
-//    @After
-//    public void after() {
-//        reactiveMongoTemplate.dropCollection(AgendaItem.class)
-//            .subscribe();
-//    }
-
-
-
+    @DynamicPropertySource
+    static void redisProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.redis.host", () -> redis.getHost());
+        registry.add("spring.redis.port", () -> redis.getMappedPort(REDIS_PORT));
+    }
 
     @Test
     public void getAll_ShouldReturnsAll() {
