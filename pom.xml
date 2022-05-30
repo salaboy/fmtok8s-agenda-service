@@ -88,20 +88,20 @@
             <scope>runtime</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-security</artifactId>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-jose</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-oauth2-jose</artifactId>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-resource-server</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-oauth2-resource-server</artifactId>-->
+<!--        </dependency>-->
 
         <!--        <dependency>-->
         <!--            <groupId>io.opentracing.contrib</groupId>-->
@@ -231,8 +231,6 @@
                         <env>
                             <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
                             <BP_JVM_VERSION>17</BP_JVM_VERSION>
-                            <!--https://github.com/oracle/graal/issues/4489 and https://github.com/oracle/graal/issues/3358-->
-<!--                            <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>-H:+ReportExceptionStackTraces -H:+ReportUnsupportedElementsAtRuntime  &#45;&#45;initialize-at-build-time=org.springframework.util.unit.DataSize,org.springframework.util.ClassUtils,org.springframework.util.ConcurrentReferenceHashMap,ch.qos.logback.classic.Logger,ch.qos.logback.classic.Level,ch.qos.logback.core.spi.AppenderAttachableImpl,ch.qos.logback.core.status.InfoStatus,ch.qos.logback.core.status.StatusBase,ch.qos.logback.core.util.StatusPrinter,ch.qos.logback.core.util.Loader,ch.qos.logback.core.CoreConstants,org.slf4j.MDC,org.slf4j.LoggerFactory,org.slf4j.impl.StaticLoggerBinder,io.netty.util.internal.logging.Log4JLogger &#45;&#45;initialize-at-run-time=io.netty.handler.ssl.JettyNpnSslEngine,io.netty.handler.ssl.JdkNpnApplicationProtocolNegotiator,io.netty.handler.ssl.BouncyCastleAlpnSslUtils,io.netty.handler.ssl.ReferenceCountedOpenSslEngine,io.netty.handler.ssl.ConscryptAlpnSslEngine,io.netty.handler.ssl.OpenSsl,io.netty.channel.epoll.Epoll,io.netty.channel.epoll.EpollEventLoop,io.netty.channel.epoll.Native,io.netty.channel.epoll.EpollEventArray,io.netty.channel.DefaultFileRegion,io.netty.channel.unix.Errors,io.netty.channel.unix.IovArray,io.netty.channel.unix.Limits</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>-->
                         </env>
                     </image>
                 </configuration>
