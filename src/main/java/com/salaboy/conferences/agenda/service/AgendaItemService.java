@@ -17,14 +17,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.codec.CodecCustomizer;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
 import org.springframework.http.codec.CodecConfigurer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -36,14 +39,34 @@ public class AgendaItemService {
     @Value("${EVENTS_ENABLED:false}")
     private Boolean eventsEnabled;
 
-    private WebClient.Builder rest;
+    private final WebClient.Builder rest;
+    private final AgendaItemRepository agendaItemRepository;
 
     @Value("${K_SINK:http://broker-ingress.knative-eventing.svc.cluster.local/default/default}")
     private String K_SINK;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    private final AgendaItemRepository agendaItemRepository;
+    public AgendaItemService(AgendaItemRepository agendaItemRepository, WebClient.Builder rest) {
+        this.agendaItemRepository = agendaItemRepository;
+        this.rest = rest;
+    }
+
+    public Flux<AgendaItem> getAll() {
+        return agendaItemRepository.findAll();
+    }
+
+    public Flux<AgendaItem> getByDay(String day) {
+        return agendaItemRepository.findByDay(day);
+    }
+
+    public Mono<AgendaItem> getById(String id) {
+        return agendaItemRepository.findById(id);
+    }
+
+    public Mono<Void> deleteAll() {
+        return agendaItemRepository.deleteAll();
+    }
 
     @Configuration
     public static class CloudEventHandlerConfiguration implements CodecCustomizer {
@@ -56,57 +79,56 @@ public class AgendaItemService {
 
     }
 
-    public AgendaItemService(AgendaItemRepository agendaItemRepository, WebClient.Builder rest) {
-        this.agendaItemRepository = agendaItemRepository;
-        this.rest = rest;
-    }
 
-    public String createAgendaItem(AgendaItem agendaItem) {
+
+    public Mono<AgendaItem> createAgendaItem(AgendaItem agendaItem) {
         log.info("> New Agenda Item Received: " + agendaItem);
-        if (Pattern.compile(Pattern.quote("fail"), Pattern.CASE_INSENSITIVE).matcher(agendaItem.getTitle()).find()) {
+        if (Pattern.compile(Pattern.quote("fail"), Pattern.CASE_INSENSITIVE).matcher(agendaItem.title()).find()) {
             log.error(">> Something went wrong, it seems on purpose :)");
             throw new IllegalStateException("Something went wrong with adding the Agenda Item: " + agendaItem);
         }
 
-        AgendaItem savedAgendaItem = agendaItemRepository.save(agendaItem);
-
-        log.info("> Agenda Item Added to Agenda: {}", savedAgendaItem);
         log.info("\t eventsEnabled: " + eventsEnabled);
+        return agendaItemRepository.save(agendaItem)
+                .then(emitCloudEventForAgendaItemAdded(agendaItem));
 
-        if(eventsEnabled) {
-            try {
-                emitCloudEventForAgendaItemAdded(savedAgendaItem);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return "Agenda Item Added to Agenda";
 
     }
 
-    private void emitCloudEventForAgendaItemAdded(AgendaItem agendaItem) throws JsonProcessingException {
+    private String writeValueAsString(Object object) {
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (JsonProcessingException ex) {
+            throw new IllegalStateException("Error when serializing Score", ex);
+        }
+    }
 
-        CloudEventBuilder cloudEventBuilder = CloudEventBuilder.v1()
-                .withId(UUID.randomUUID().toString())
-                .withType("Agenda.ItemCreated")
-                .withSource(URI.create("agenda-service.default.svc.cluster.local"))
-                .withData(objectMapper.writeValueAsString(agendaItem).getBytes(StandardCharsets.UTF_8))
-                .withDataContentType("application/json; charset=UTF-8")
-                .withSubject(agendaItem.getTitle());
+    private Mono<AgendaItem>  emitCloudEventForAgendaItemAdded(AgendaItem agendaItem)  {
+        if(eventsEnabled) {
+            CloudEventBuilder cloudEventBuilder = CloudEventBuilder.v1()
+                    .withId(UUID.randomUUID().toString())
+                    .withType("Agenda.ItemCreated")
+                    .withSource(URI.create("agenda-service.default.svc.cluster.local"))
+                    .withData(writeValueAsString(agendaItem).getBytes(StandardCharsets.UTF_8))
+                    .withDataContentType("application/json; charset=UTF-8")
+                    .withSubject(agendaItem.title());
 
-        CloudEvent cloudEvent = cloudEventBuilder.build();
+            CloudEvent cloudEvent = cloudEventBuilder.build();
 
-        logCloudEvent(cloudEvent);
+            logCloudEvent(cloudEvent);
 
-        log.info("Producing CloudEvent with AgendaItem: " + agendaItem);
+            log.info("Producing CloudEvent with AgendaItem: " + agendaItem);
 
-        rest.baseUrl(K_SINK).filter(logRequest()).build()
-                .post().bodyValue(cloudEvent)
-                .retrieve()
-                .bodyToMono(String.class)
-                .doOnError(t -> t.printStackTrace())
-                .doOnSuccess(s -> log.info("Result -> " + s)).subscribe();
+            return rest.baseUrl(K_SINK).filter(logRequest()).build()
+                    .post().bodyValue(cloudEvent)
+                    .retrieve()
+                    .toBodilessEntity()
+                    .doOnSuccess(result -> log.info("Published event. Id: {}, type: {}, agendaItemId: {}.", cloudEvent.getId(), cloudEvent.getType(), agendaItem.getId()))
+                    .doOnError(result -> log.error("Error publishing event. Cause: {}. Message: {}", result.getCause(), result.getMessage()))
+                    .thenReturn(agendaItem);
+        }
+        return Mono.just(agendaItem);
+
     }
 
     private void logCloudEvent(CloudEvent cloudEvent) {

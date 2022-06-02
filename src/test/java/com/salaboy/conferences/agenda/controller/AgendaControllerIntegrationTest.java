@@ -2,8 +2,8 @@ package com.salaboy.conferences.agenda.controller;
 
 import com.salaboy.conferences.agenda.AgendaService;
 import com.salaboy.conferences.agenda.model.AgendaItem;
-import com.salaboy.conferences.agenda.repository.AgendaItemRepository;
 import com.salaboy.conferences.agenda.util.AgendaItemCreator;
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,11 +31,9 @@ public class AgendaControllerIntegrationTest {
     private WebTestClient webTestClient;
 
     @Container
-    static GenericContainer<?> redis = new GenericContainer<>(DockerImageName.parse("redis:6.0"))
+    static GenericContainer<?> redis = new GenericContainer<>(DockerImageName.parse("redis:6"))
             .withExposedPorts(REDIS_PORT);
 
-    @Autowired
-    private AgendaItemRepository agendaItemRepository;
 
     @DynamicPropertySource
     static void redisProperties(DynamicPropertyRegistry registry) {
@@ -43,9 +41,10 @@ public class AgendaControllerIntegrationTest {
         registry.add("spring.redis.port", () -> redis.getMappedPort(REDIS_PORT));
     }
 
+
     @Test
     public void getAll_ShouldReturnsAll() {
-
+        System.out.println("Adding Dynamic Properties: " + redis.getHost() + " port: " + redis.getMappedPort(REDIS_PORT));
         createAgendaItem(AgendaItemCreator.validWithDefaultDay());
         createAgendaItem(AgendaItemCreator.otherValidWithDefaultDay());
 
@@ -69,11 +68,11 @@ public class AgendaControllerIntegrationTest {
         var responseBody = createAgendaItem(agendaItem)
                 .expectStatus()
                 .isOk()
-                .expectBody(String.class)
+                .expectBody(AgendaItem.class)
                 .returnResult()
                 .getResponseBody();
 
-        assertThat(responseBody).isEqualTo("Agenda Item Added to Agenda");
+        assertThat(responseBody).isEqualTo(agendaItem);
     }
 
     @Test
@@ -127,7 +126,7 @@ public class AgendaControllerIntegrationTest {
         assertThat(responseBody).first().isNotNull();
 
         responseBody.stream().forEach(i -> {
-            assertThat(i.getDay()).isEqualTo(AgendaItemCreator.DAY);
+            assertThat(i.day()).isEqualTo(AgendaItemCreator.DAY);
         });
     }
 
