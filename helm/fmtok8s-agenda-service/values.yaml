@@ -9,7 +9,8 @@ image:
 
 redis:
   enabled: true
-
+  host: redis-master.default.svc.cluster.local
+  port: 6379
 # define environment variables here as a map of key: value
 env:
 

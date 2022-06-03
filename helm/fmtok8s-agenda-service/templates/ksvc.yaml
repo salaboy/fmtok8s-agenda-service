@@ -23,6 +23,15 @@ spec:
             value: dev
           - name: VERSION
             value: {{ .Chart.Version }}
+          - name: SPRING_REDIS_HOST
+            value: { { .Values.redis.host } }
+          - name: SPRING_REDIS_PORT
+            value: { { .Values.redis.port } }
+          - name: SPRING_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: redis
+                key: redis-password
           - name: POD_NODE_NAME
             valueFrom:
               fieldRef:
