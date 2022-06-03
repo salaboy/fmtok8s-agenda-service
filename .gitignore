@@ -9,7 +9,8 @@
 .idea/
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
-
+charts/
+Chart.lock
 # Package Files #
 *.jar
 *.war
