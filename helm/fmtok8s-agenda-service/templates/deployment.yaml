@@ -11,10 +11,7 @@ spec:
   selector:
     matchLabels:
       app: {{ template "fullname" . }}
-{{- if .Values.hpa.enabled }}
-{{- else }}
   replicas: {{ .Values.replicaCount }}
-{{- end }}
   template:
     metadata:
       labels:
