@@ -24,9 +24,9 @@ spec:
           - name: VERSION
             value: {{ .Chart.Version }}
           - name: SPRING_REDIS_HOST
-            value: { { .Values.redis.host } }
+            value: {{ .Values.redis.host }}
           - name: SPRING_REDIS_PORT
-            value: { { .Values.redis.port } }
+            value: {{ .Values.redis.port }}
           - name: SPRING_REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
