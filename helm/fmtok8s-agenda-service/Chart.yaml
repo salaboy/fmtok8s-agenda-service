@@ -3,3 +3,8 @@ description: FMTOK8s Agenda Service Helm chart for Kubernetes
 name: fmtok8s-agenda-service
 version: 0.1.0
 icon: https://salaboy.files.wordpress.com/2019/07/avatar.png
+dependencies:
+- name: redis
+  version: 16.10.1
+  repository: https://charts.bitnami.com/bitnami
+  condition: redis.enabled
