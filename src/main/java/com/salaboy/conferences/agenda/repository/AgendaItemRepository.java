@@ -10,9 +10,13 @@ public interface AgendaItemRepository extends ReactiveCrudRepository<AgendaItem,
 
     Flux<AgendaItem> findByDay(String day);
 
+    Flux<AgendaItem> highlights();
+
     Mono<AgendaItem> findByTitle(String title);
 
     Mono<AgendaItem> findByProposal(Proposal proposal);
+
+
 
     Mono<Boolean> existsByTitle(String title);
 

@@ -1,2 +1,2 @@
 
-You can access the Service by doing `kubectl port-forward svc/fmtok8s-agenda 8080:80`
+You can access the Service by doing `kubectl port-forward svc/fmtok8s-agenda -n {{ .Release.Namespace }} 8080:80`

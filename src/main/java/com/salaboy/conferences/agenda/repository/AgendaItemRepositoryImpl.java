@@ -87,8 +87,10 @@ public class AgendaItemRepositoryImpl implements AgendaItemRepository {
                 .filter(ai -> ai.day().equals(day));
     }
 
-
-
+    @Override
+    public Flux<AgendaItem> highlights() {
+        return hashOperations.values(KEY).take(4);
+    }
 
 
     @Override
@@ -189,7 +191,7 @@ public class AgendaItemRepositoryImpl implements AgendaItemRepository {
     @Override
     public Mono<AgendaItem> findByProposal(Proposal proposal) {
         return hashOperations.values(KEY)
-                .filter(ai -> ai.proposal().equals(proposal))
+                .filter(ai -> ai.proposal().id().equals(proposal.id()))
                 .singleOrEmpty();
     }
 

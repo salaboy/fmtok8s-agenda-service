@@ -5,13 +5,10 @@ import com.salaboy.conferences.agenda.model.AgendaItem;
 import com.salaboy.conferences.agenda.service.AgendaItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @RestController
 @RequestMapping
@@ -20,13 +17,12 @@ public class AgendaController {
     private static final Logger log = LoggerFactory.getLogger(AgendaController.class);
     private final AgendaItemService agendaItemService;
 
-    public AgendaController(
-            final AgendaItemService agendaItemService) {
-
+    public AgendaController(final AgendaItemService agendaItemService) {
         this.agendaItemService = agendaItemService;
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Mono<AgendaItem> newAgendaItem(@RequestBody AgendaItem agendaItem) {
         log.info("> REST ENDPOINT INVOKED for Creating a new Agenda Item");
         return agendaItemService.createAgendaItem(agendaItem);
@@ -40,15 +36,7 @@ public class AgendaController {
 
     @GetMapping("/highlights")
     public Flux<AgendaItem> getHighlights() {
-        List<AgendaItem> highlights = new ArrayList<>();
-        Iterable<AgendaItem> all = agendaItemService.getAll().toIterable();
-        all.forEach(highlights::add);
-        Collections.shuffle(highlights);
-        if (highlights.size() > 4) {
-            return Flux.fromIterable(highlights.subList(0, 3));
-        } else {
-            return Flux.fromIterable(highlights);
-        }
+        return agendaItemService.getHighlights();
     }
 
     @GetMapping("/day/{day}")

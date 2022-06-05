@@ -68,6 +68,10 @@ public class AgendaItemService {
         return agendaItemRepository.deleteAll();
     }
 
+    public Flux<AgendaItem> getHighlights() {
+        return agendaItemRepository.highlights();
+    }
+
     @Configuration
     public static class CloudEventHandlerConfiguration implements CodecCustomizer {
 
@@ -80,7 +84,6 @@ public class AgendaItemService {
     }
 
 
-
     public Mono<AgendaItem> createAgendaItem(AgendaItem agendaItem) {
         log.info("> New Agenda Item Received: " + agendaItem);
         if (Pattern.compile(Pattern.quote("fail"), Pattern.CASE_INSENSITIVE).matcher(agendaItem.title()).find()) {
@@ -90,8 +93,7 @@ public class AgendaItemService {
 
         log.info("\t eventsEnabled: " + eventsEnabled);
         return agendaItemRepository.save(agendaItem)
-                .then(emitCloudEventForAgendaItemAdded(agendaItem));
-
+                .doOnSuccess(ai -> emitCloudEventForAgendaItemAdded(ai));
 
     }
 
@@ -103,8 +105,8 @@ public class AgendaItemService {
         }
     }
 
-    private Mono<AgendaItem>  emitCloudEventForAgendaItemAdded(AgendaItem agendaItem)  {
-        if(eventsEnabled) {
+    private Mono<AgendaItem> emitCloudEventForAgendaItemAdded(AgendaItem agendaItem) {
+        if (eventsEnabled) {
             CloudEventBuilder cloudEventBuilder = CloudEventBuilder.v1()
                     .withId(UUID.randomUUID().toString())
                     .withType("Agenda.ItemCreated")
