@@ -67,12 +67,13 @@ public class AgendaControllerIntegrationTest {
         // action, assert
         var responseBody = createAgendaItem(agendaItem)
                 .expectStatus()
-                .isOk()
+                .isCreated()
                 .expectBody(AgendaItem.class)
                 .returnResult()
                 .getResponseBody();
 
         assertThat(responseBody).isEqualTo(agendaItem);
+        assertThat(responseBody.id()).isNotNull();
     }
 
     @Test

@@ -22,4 +22,5 @@ public record AgendaItem(String id, Proposal proposal, String title, String auth
     public AgendaItem withVersion(int version) {
         return new AgendaItem(id(), proposal(), title(), author(), day(), time(), version);
     }
+
 }
