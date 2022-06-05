@@ -72,8 +72,13 @@ public class AgendaControllerIntegrationTest {
                 .returnResult()
                 .getResponseBody();
 
-        assertThat(responseBody).isEqualTo(agendaItem);
+
         assertThat(responseBody.id()).isNotNull();
+        assertThat(responseBody.title()).isEqualTo(agendaItem.title());
+        assertThat(responseBody.proposal()).isEqualTo(agendaItem.proposal());
+        assertThat(responseBody.author()).isEqualTo(agendaItem.author());
+        assertThat(responseBody.day()).isEqualTo(agendaItem.day());
+        assertThat(responseBody.time()).isEqualTo(agendaItem.time());
     }
 
     @Test
