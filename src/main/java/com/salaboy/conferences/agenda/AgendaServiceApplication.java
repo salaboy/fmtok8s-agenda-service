@@ -15,11 +15,11 @@ import org.springframework.nativex.hint.TypeHint;
         @TypeHint(types = NioDatagramChannel.class)
 })
 @SpringBootApplication
-public class AgendaService {
+public class AgendaServiceApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(AgendaService.class, args);
+        SpringApplication.run(AgendaServiceApplication.class, args);
 
     }
 

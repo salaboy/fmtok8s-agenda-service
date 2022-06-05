@@ -7,18 +7,20 @@ import java.util.UUID;
 
 public class AgendaItemCreator {
 
-    public static final String DAY = "2020-10-05";
-    public static final String OTHER_DAY = "2020-10-02";
+    public static final String MONDAY = "Monday";
+    public static final String TUESDAY = "Tuesday";
 
-    public static AgendaItem validWithDefaultDay() {
-        return new AgendaItem(null, new Proposal(UUID.randomUUID().toString()), "Title", "Author", DAY, "13:00", 0);
+    public static AgendaItem validMonday() {
+        String id = UUID.randomUUID().toString();
+        return new AgendaItem(null, new Proposal(id), "Title-" + id, "Author", MONDAY, "13:00", 0);
     }
 
-    public static AgendaItem otherValidWithDefaultDay() {
-        return new AgendaItem(null, new Proposal(UUID.randomUUID().toString()), "Other title", "Other Author", DAY, "13:00", 0);
+    public static AgendaItem validTuesday() {
+        String id = UUID.randomUUID().toString();
+        return new AgendaItem(null, new Proposal(id), "Title-" + id, "Author", TUESDAY, "13:00", 0);
     }
 
     public static AgendaItem withFail() {
-        return new AgendaItem(null, new Proposal(UUID.randomUUID().toString()),"Title fail", "Author fail",  OTHER_DAY, "12:30", 0);
+        return new AgendaItem(null, new Proposal(UUID.randomUUID().toString()),"Title fail", "Author fail",  TUESDAY, "12:30", 0);
     }
 }
