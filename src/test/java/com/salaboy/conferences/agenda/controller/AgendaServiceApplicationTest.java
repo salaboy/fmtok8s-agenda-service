@@ -27,6 +27,7 @@ import static com.salaboy.conferences.agenda.util.AgendaItemCreator.MONDAY;
 import static com.salaboy.conferences.agenda.util.AgendaItemCreator.TUESDAY;
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 @SpringBootTest(classes = AgendaServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = "events.enabled=false")
 @Testcontainers
@@ -72,8 +73,10 @@ public class AgendaServiceApplicationTest {
 
     @Test
     public void getAll_ShouldReturnsAll() {
-        createAgendaItem(AgendaItemCreator.validMonday());
-        createAgendaItem(AgendaItemCreator.validTuesday());
+        AgendaItem agendaItemMonday = AgendaItemCreator.validMonday();
+        AgendaItem agendaItemTuesday = AgendaItemCreator.validTuesday();
+        createAgendaItem(agendaItemMonday);
+        createAgendaItem(agendaItemTuesday);
 
         var responseBody = getAll()
                 .expectStatus()
@@ -82,11 +85,11 @@ public class AgendaServiceApplicationTest {
                 .returnResult()
                 .getResponseBody();
 
-        assertThat(responseBody).hasSize(2);
+        assertThat(responseBody).hasSize(2).extracting(AgendaItem::day)
+                .containsExactlyInAnyOrder(MONDAY, TUESDAY);
         assertThat(responseBody.get(1).id()).isNotNull();
-        assertThat(responseBody.get(1).day()).isEqualTo(MONDAY);
         assertThat(responseBody.get(0).id()).isNotNull();
-        assertThat(responseBody.get(0).day()).isEqualTo(TUESDAY);
+
     }
 
     @Test
