@@ -49,6 +49,7 @@ public class AgendaServiceApplicationTest {
                 .expectBody(Void.class)
                 .returnResult().getResponseBody();
     }
+
     @AfterAll
     static void clean() throws IOException {
         mockWebServer.shutdown();
