@@ -53,7 +53,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
       - name: fmtok8s-ci
-        uses: mcruzdev/fmtok8s-ci@v0.1.0
+        uses: mcruzdev/fmtok8s-ci@v0.1.1
       - name: Checkout
         uses: actions/checkout@v3
       - name: Download app.jar from build job
