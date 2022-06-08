@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: fmtok8s-ci
-        uses: mcruzdev/fmtok8s-ci@v0.1.13
+        uses: mcruzdev/fmtok8s-ci@v0.1.15
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout
@@ -87,7 +87,7 @@ jobs:
     needs: [setup, build]
     steps:
       - name: fmtok8s-ci
-        uses: mcruzdev/fmtok8s-ci@v0.1.13
+        uses: mcruzdev/fmtok8s-ci@v0.1.15
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout
