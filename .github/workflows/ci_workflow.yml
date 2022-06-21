@@ -58,7 +58,6 @@ jobs:
         with:
           name: app-jar
           path: target/app.jar
-          labels: ${{ needs.setup.outputs.docker_labels }}
   publish:
     needs: [ setup, build ]
     runs-on: ubuntu-20.04
