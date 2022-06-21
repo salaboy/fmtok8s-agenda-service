@@ -14,6 +14,7 @@ spec:
     metadata:
       annotations:
         autoscaling.knative.dev/minScale: "1"
+
     spec:
       containers:
         - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
