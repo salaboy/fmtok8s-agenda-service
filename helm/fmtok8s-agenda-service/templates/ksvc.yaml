@@ -24,14 +24,14 @@ spec:
           - name: VERSION
             value: {{ .Chart.Version }}
           - name: SPRING_REDIS_HOST
-            value: {{ .Values.redis.host }}
+            value: {{ .Release.Name }}-redis-master.{{ .Release.Namespace }}.svc.cluster.local
           - name: SPRING_REDIS_PORT
-            value: {{ .Values.redis.port }}
+            value: "6379"
           - name: SPRING_REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: redis
-                key: redis-password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-redis
+                  key: redis-password
           - name: POD_NODE_NAME
             valueFrom:
               fieldRef:
