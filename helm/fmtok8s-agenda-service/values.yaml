@@ -9,6 +9,8 @@ image:
 
 redis:
   enabled: true
+  replica:
+    replicaCount: 1
 # define environment variables here as a map of key: value
 env:
 

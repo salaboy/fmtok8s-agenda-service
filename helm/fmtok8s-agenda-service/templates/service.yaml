@@ -1,4 +1,4 @@
-{{- if .Values.knativeDeploy }}
+{{- if .Values.knative.enabled }}
 {{- else }}
 apiVersion: v1
 kind: Service
