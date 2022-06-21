@@ -11,8 +11,17 @@ redis:
   enabled: true
 # define environment variables here as a map of key: value
 env:
-# enable this flag to use knative serve to deploy the app
-knativeDeploy: false
+
+# enable this flag to use knative serving to deploy the service
+knative:
+  enabled: false
+  traffic:
+# You can add traffic rules here to customize the Knative Serving rules
+#  - latestRevision: false
+#    percent: 50
+#    revisionName: fmtok8s-agenda-00001
+#  - latestRevision: true
+#    percent: 50
 
 service:
   name: fmtok8s-agenda

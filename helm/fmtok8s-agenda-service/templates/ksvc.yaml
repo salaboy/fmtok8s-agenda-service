@@ -1,4 +1,4 @@
-{{- if .Values.knativeDeploy }}
+{{- if .Values.knative.enabled }}
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
@@ -14,7 +14,6 @@ spec:
     metadata:
       annotations:
         autoscaling.knative.dev/minScale: "1"
-
     spec:
       containers:
         - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -29,10 +28,10 @@ spec:
           - name: SPRING_REDIS_PORT
             value: "6379"
           - name: SPRING_REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-redis
-                  key: redis-password
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis
+                key: redis-password
           - name: POD_NODE_NAME
             valueFrom:
               fieldRef:
@@ -58,4 +57,9 @@ spec:
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
           resources:
 {{ toYaml .Values.resources | indent 14 }}
+  traffic:
+{{ toYaml .Values.knative.traffic | indent 2 }}
+
 {{- end }}
+
+
