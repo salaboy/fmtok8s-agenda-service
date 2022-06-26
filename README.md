@@ -1,5 +1,10 @@
 # From Monolith To K8s :: Agenda Service
 
+Run with Docker locally: 
+```
+docker run -p 8080:8080 ghcr.io/salaboy/fmtok8s-agenda-service
+```
+
 
 Create new agenda item using `httpie`
 

@@ -9,6 +9,7 @@ metadata:
   {{- end }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    prometheus: {{ .Values.service.name }}
 spec:
   template:
     metadata:
@@ -16,6 +17,7 @@ spec:
         autoscaling.knative.dev/minScale: "1"
       labels:
         networking.knative.dev/visibility: cluster-local
+        prometheus: {{ .Values.service.name }}
     spec:
       containers:
         - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
