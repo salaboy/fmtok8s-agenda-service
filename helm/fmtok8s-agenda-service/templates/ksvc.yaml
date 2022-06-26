@@ -11,7 +11,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     {{- if .Values.prometheus.enabled }}
     prometheus: {{ .Values.service.name }}
-    {{- end}}
+    {{- end  }}
 spec:
   template:
     metadata:
@@ -21,8 +21,7 @@ spec:
         networking.knative.dev/visibility: cluster-local
         {{- if .Values.prometheus.enabled }}
         prometheus: {{ .Values.service.name }}
-        {{- end}}
-spec:
+        {{- end }}
     spec:
       containers:
         - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -75,5 +74,4 @@ spec:
 {{ toYaml .Values.knative.traffic | indent 2 }}
 {{- end }}
 {{- end }}
-
 
