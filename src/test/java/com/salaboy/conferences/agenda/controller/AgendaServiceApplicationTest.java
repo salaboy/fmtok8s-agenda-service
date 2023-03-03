@@ -11,15 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+//import org.springframework.test.context.DynamicPropertyRegistry;
+//import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
+
 
 import java.io.IOException;
 
@@ -30,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = AgendaServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = "events.enabled=false")
-@Testcontainers
 public class AgendaServiceApplicationTest {
 
     private static final int REDIS_PORT = 6379;
@@ -59,16 +55,12 @@ public class AgendaServiceApplicationTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    @Container
-    static GenericContainer<?> redis = new GenericContainer<>(DockerImageName.parse("redis:6"))
-            .withExposedPorts(REDIS_PORT);
 
-
-    @DynamicPropertySource
-    static void redisProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.redis.host", () -> redis.getHost());
-        registry.add("spring.redis.port", () -> redis.getMappedPort(REDIS_PORT));
-    }
+    // @DynamicPropertySource
+    // static void redisProperties(DynamicPropertyRegistry registry) {
+    //     registry.add("spring.redis.host", () -> redis.getHost());
+    //     registry.add("spring.redis.port", () -> redis.getMappedPort(REDIS_PORT));
+    // }
 
 
     @Test
