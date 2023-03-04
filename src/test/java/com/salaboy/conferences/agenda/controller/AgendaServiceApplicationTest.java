@@ -31,9 +31,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AgendaServiceApplicationTest {
 
     @Value("${REDIS_PORT:6379}")
-    private int REDIS_PORT;
+    private static int REDIS_PORT;
     @Value("${REDIS_HOST:redis}")
-    private String REDIS_HOST;
+    private static String REDIS_HOST;
 
     private static MockWebServer mockWebServer;
 
