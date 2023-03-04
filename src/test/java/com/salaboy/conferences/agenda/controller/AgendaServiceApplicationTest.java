@@ -9,11 +9,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -30,10 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestPropertySource(properties = "events.enabled=false")
 public class AgendaServiceApplicationTest {
 
-    @Value("${REDIS_PORT:6379}")
-    private static int REDIS_PORT;
-    @Value("${REDIS_HOST:redis}")
-    private static String REDIS_HOST;
+
 
     private static MockWebServer mockWebServer;
 
@@ -61,11 +56,7 @@ public class AgendaServiceApplicationTest {
     private WebTestClient webTestClient;
 
 
-    @DynamicPropertySource
-    static void redisProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.redis.host", () -> REDIS_HOST);
-        registry.add("spring.redis.port", () -> REDIS_PORT);
-    }
+   
 
 
     @Test

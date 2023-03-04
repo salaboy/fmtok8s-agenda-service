@@ -68,9 +68,9 @@ jobs:
       - name: Build application
         run: mvn package
         env: 
-          REDIS_HOST: redis
+          SPRING_REDIS_HOST: redis
           # The default Redis port
-          REDIS_PORT: 6379
+          SPRING_REDIS_PORT: 6379
       - name: Upload app.jar
         uses: actions/upload-artifact@v3
         with:
