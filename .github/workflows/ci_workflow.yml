@@ -8,6 +8,9 @@ env:
 permissions:
   packages: write
 
+
+    
+
 jobs:
   setup:
     runs-on: ubuntu-20.04
@@ -42,6 +45,17 @@ jobs:
   build:
     needs: [ setup ]
     runs-on: ubuntu-20.04
+    services:
+      # Label used to access the service container
+      redis:
+        # Docker Hub image
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout and Set up JDK 17 Temurin
         uses: actions/checkout@v3
@@ -53,6 +67,10 @@ jobs:
           cache: 'maven'
       - name: Build application
         run: mvn package
+        env: 
+          REDIS_HOST: redis
+          # The default Redis port
+          REDIS_PORT: 6379
       - name: Upload app.jar
         uses: actions/upload-artifact@v3
         with:
