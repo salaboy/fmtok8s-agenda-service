@@ -56,6 +56,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          # Maps port 6379 on service container to the host
+          - 6379:6379  
     steps:
       - name: Checkout and Set up JDK 17 Temurin
         uses: actions/checkout@v3
@@ -68,7 +71,7 @@ jobs:
       - name: Build application
         run: mvn package
         env: 
-          SPRING_REDIS_HOST: redis
+          SPRING_REDIS_HOST: localhost
           # The default Redis port
           SPRING_REDIS_PORT: 6379
       - name: Upload app.jar
