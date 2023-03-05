@@ -128,7 +128,11 @@ func buildImage(ctx context.Context, nameTag string) error {
 func buildContainer(ctx context.Context) *dagger.Container {
 	c := getDaggerClient(ctx)
 
-	javaContainer := java.WithMaven(c)
+	redis := c.Container().From("redis:6").WithExposedPort(6379).WithExec(nil)
+
+	javaContainer := java.WithMaven(c).
+		WithEnvVariable("SPRING_REDIS_HOST", "redis").
+		WithServiceBinding("redis", redis)
 
 	return javaContainer.WithExec([]string{"mvn", "package"})
 }
