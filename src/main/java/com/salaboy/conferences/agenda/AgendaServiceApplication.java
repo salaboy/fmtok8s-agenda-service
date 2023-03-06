@@ -20,6 +20,7 @@ public class AgendaServiceApplication {
     public static void main(String[] args) {
 
         SpringApplication.run(AgendaServiceApplication.class, args);
+        System.out.println("Agenda Service Up and Running!!");
 
     }
 
