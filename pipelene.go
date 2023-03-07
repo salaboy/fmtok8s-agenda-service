@@ -32,7 +32,7 @@ func main() {
 		}
 		err = publishChart(ctx, os.Args[2], os.Args[3], os.Args[4], os.Args[5], os.Args[6])
 
-	case "service-pipeline-full":
+	case "full":
 		if len(os.Args) < 8 {
 			err = fmt.Errorf("invalid number of arguments: expected imageName, token,chartsDir, owner, repository,branch ")
 			break

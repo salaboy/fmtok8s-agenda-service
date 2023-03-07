@@ -1,0 +1,121 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: agenda-service-pipeline
+  annotations:
+    description: |
+      Build the artifacts for the Conference Application Agenda Service
+spec:
+  params:
+    - name: gitRepository
+      description: The git repository that hosts context and Dockerfile
+      default: https://github.com/salaboy/fmtok8s-agenda-service
+    - name: gitRevision
+      description: The git revision to build
+      default: main
+    - name: context
+      description: The path to the docker context in the sources workspace
+      default: /
+    - name: dockerfile
+      description: The path to the dockerfile within the context
+      default: Dockerfile
+    - name: target
+      description: The target container registry and path where to build the image
+      default: salaboy
+    - name: target-name
+      description: Name of the image to publish
+      default: fmtok8s-agenda-service
+    - name: version
+      description: the target version to build
+      default: 0.1.0-service-pipeline
+  workspaces:
+    - name: sources
+      description: Workspace where the git repo is prepared for building
+    - name: maven-settings
+      description: custom maven settings workspace
+    - name: dockerconfig
+      description: Docker config secret
+  tasks:
+    - name: clone-repo
+      taskRef:
+        resolver: bundles
+        params:
+        - name: bundle
+          value: gcr.io/tekton-releases/catalog/upstream/git-clone:0.4
+        - name: name
+          value: git-clone
+        - name: kind
+          value: task  
+      params:
+        - name: url
+          value: $(params.gitRepository)
+        - name: revision
+          value: $(params.gitRevision)
+      workspaces:
+        - name: output
+          workspace: sources
+    - name: maven-build
+      runAfter: [clone-repo]
+      taskSpec:
+        # params:
+        #   - name: MAVEN_IMAGE
+        #     value: gcr.io/cloud-builders/mvn
+        #   - name: GOALS
+        #     value: 
+        #     - package
+        #   - name: CONTEXT_DIR
+        #     value: $(params.context)  
+              
+        workspaces:
+        - name: sources   
+        steps:
+        - name: mvn-goals
+          image: gcr.io/cloud-builders/mvn
+          workingDir: "/"
+          command: ["/usr/bin/mvn"]
+          args:
+            - "package"
+        sidecars: 
+        - image: redis:6
+          name: redis
+    - name: image-build
+      runAfter: [maven-build]
+      taskRef:
+        resolver: bundles
+        params:
+        - name: bundle
+          value: gcr.io/tekton-releases/catalog/upstream/kaniko:0.4
+        - name: name
+          value: build-container
+        - name: kind
+          value: task
+      params:
+        - name: IMAGE
+          value: $(params.target)/$(params.target-name):$(params.version)
+        - name: CONTEXT
+          value: $(params.context)
+        - name: DOCKERFILE
+          value: $(params.dockerfile)
+      workspaces:
+        - name: source
+          workspace: sources
+        - name: dockerconfig
+          workspace: dockerconfig
+    - name: helm-package
+      runAfter: [image-build]
+      workspaces:
+        - name: sources
+          workspace: sources
+      taskSpec:
+        workspaces:
+          - name: sources
+        steps:
+          - name: package
+            image: quay.io/roboll/helmfile:helm3-v0.135.0
+            script: |
+              #!/bin/sh
+              set -ex
+
+              cd $(workspaces.sources.path)/helm/fmtok8s-agenda-service
+
+              helm template .
