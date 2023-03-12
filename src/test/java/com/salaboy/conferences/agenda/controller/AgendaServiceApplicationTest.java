@@ -48,8 +48,12 @@ public class AgendaServiceApplicationTest {
     }
 
     @AfterAll
-    static void clean() throws IOException {
-        mockWebServer.shutdown();
+    static void clean() {
+        try {
+            mockWebServer.shutdown();
+        } catch( IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Autowired
