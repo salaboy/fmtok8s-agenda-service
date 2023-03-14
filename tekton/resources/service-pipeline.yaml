@@ -81,7 +81,6 @@ spec:
       runAfter: [maven-build]
       taskRef:
         name: kaniko
-        
       params:
         - name: IMAGE
           value: salaboy/fmtok8s-agenda-service:0.1.0-pipeline
