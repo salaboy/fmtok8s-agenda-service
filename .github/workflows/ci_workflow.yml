@@ -1,4 +1,4 @@
-name: From Monolith to K8s (Github Actions)
+name: Agenda Service Pipeline (GitHub Action)
 on: [ push ]
 
 env:
@@ -7,9 +7,6 @@ env:
 
 permissions:
   packages: write
-
-
-    
 
 jobs:
   setup:

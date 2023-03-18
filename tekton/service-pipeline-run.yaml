@@ -3,7 +3,10 @@ kind: PipelineRun
 metadata:
   name: service-pipeline-run-1
 spec:
-  #serviceAccountName: dockerconfig
+  params: 
+    target-registry: salaboy
+    target-name: fmtok8s-agenda-service
+    target-version: 0.1.0-from-pipeline-run
   workspaces:
     - name: sources
       volumeClaimTemplate: 

@@ -7,27 +7,27 @@ metadata:
       Build the artifacts for the Conference Application Agenda Service
 spec:
   params:
-    # - name: gitRepository
-    #   description: The git repository that hosts context and Dockerfile
-    #   default: https://github.com/salaboy/fmtok8s-agenda-service
-    # - name: gitRevision
-    #   description: The git revision to build
-    #   default: main
-    # - name: context
-    #   description: The path to the docker context in the sources workspace
-    #   default: /
-    # - name: dockerfile
-    #   description: The path to the dockerfile within the context
-    #   default: Dockerfile
-    # - name: target
-    #   description: The target container registry and path where to build the image
-    #   default: salaboy
-    # - name: target-name
-    #   description: Name of the image to publish
-    #   default: fmtok8s-agenda-service
-    # - name: version
-    #   description: the target version to build
-    #   default: 0.1.0-service-pipeline
+    - name: gitRepository
+      description: The git repository that hosts the source code of the service
+      default: https://github.com/salaboy/fmtok8s-agenda-service
+    - name: gitRevision
+      description: The git revision to build
+      default: main
+    - name: context
+      description: The path to the docker context in the sources workspace
+      default: /
+    - name: dockerfile
+      description: The path to the dockerfile within the context
+      default: Dockerfile
+    - name: target-registry
+      description: The target container registry and path where to build the image
+      default: salaboy
+    - name: target-name
+      description: Name of the image to publish
+      default: fmtok8s-agenda-service
+    - name: target-version
+      description: the target version to build
+      default: 0.1.0-service-pipeline
   workspaces:
     - name: sources
       description: Workspace where the git repo is prepared for building
@@ -41,7 +41,7 @@ spec:
         name: git-clone
       params:
         - name: url
-          value: https://github.com/salaboy/fmtok8s-agenda-service
+          value: $(params.gitRepository)
         - name: revision
           value: main
       workspaces:
@@ -50,8 +50,6 @@ spec:
     - name: maven-build
       runAfter: 
       - clone-repo
-      # taskRef:
-      #   name: maven
       params:
         - name: GOALS
           value: 
@@ -83,11 +81,11 @@ spec:
         name: kaniko
       params:
         - name: IMAGE
-          value: salaboy/fmtok8s-agenda-service:0.1.0-pipeline
+          value: $(params.target-registry)/$(params.target-name):$(params.target-version)
         - name: CONTEXT
           value: ""
         - name: DOCKERFILE
-          value: Dockerfile
+          value: $(params.dockerfile)
       workspaces:
         - name: source
           workspace: sources
