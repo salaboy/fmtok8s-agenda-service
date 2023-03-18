@@ -20,7 +20,7 @@ For this Tekton pipeline to work, you need to have installed Tekton in a Kuberne
 - Install Tekton Git, Maven, Helm Tasks
 - (Optional) Install `tkn` CLI 
 - (Optional) Install the Tekton Dashboard
-- Create a secret to push Containers to your faviourte Container Registry
+- [Create a secret to push Containers to your faviourte Container Registry](#container-registry-credentials)
 
 
 ## Install the Service Pipeline
@@ -65,21 +65,22 @@ spec:
 
 Notice that if you want to run this pipeline multiple times you will need to change the `metadata.name`. 
 
-Alternatively, you can use the `tkn` CLI tool to create a new `PipelineRun`s: 
+You should update the `target-registry: salaboy` to your own registry user or organization. In this case `salaboy` makes reference to my user on Docker Hub: `docker.io/salaboy`
 
-```
-```
-
-When using the `tkn` CLI you will be asked by the input parameters, you can accept the default by just pressing `enter`.
 
 If configured correctly, the `PipelineRun` should push the created container to the `target-registry` with the `PipelineRun` configured `target-version` tag. 
 
-You can take follow the logs of the pipeline by running: 
+
+
+## Container Registry Credentials
+
+If the pipeline is going to push docker images to DockerHub you need the following steps: 
+
+Create Docker Hub secret: 
 
 ```
+kubectl create secret docker-registry regcred --docker-server=https://index.docker.io/v1/ --docker-username=DOCKER_USERNAME --docker-password=DOCKER_PASSWORD --docker-email DOCKER_EMAIL
 ```
 
-or the suggested command using the `tkn` CLI. 
-
-
+To create this, in my Mac OSX laptop I need to access the `Keychain Access` app and then look at my `Docker Credentials`. This are generated when doing `docker login`. The DOCKER_PASSWORD is this hash, instead of my textual password for Docker Hub.
 
