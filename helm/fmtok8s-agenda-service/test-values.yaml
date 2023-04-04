@@ -1,0 +1,12 @@
+redis:
+  enabled: false
+env: 
+  - name: SPRING_REDIS_HOST
+    value: my-db-keyavalue-redis-master
+  - name: SPRING_REDIS_PORT
+    value: "6379" 
+  - name: SPRING_REDIS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: my-db-keyavalue-redis
+        key: redis-password    

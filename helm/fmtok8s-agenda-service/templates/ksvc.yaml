@@ -31,6 +31,7 @@ spec:
             value: dev
           - name: VERSION
             value: {{ .Chart.Version }}
+{{- if .Values.redis.enabled }}
           - name: SPRING_REDIS_HOST
             value: {{ .Release.Name }}-redis-master.{{ .Release.Namespace }}.svc.cluster.local
           - name: SPRING_REDIS_PORT
@@ -40,6 +41,7 @@ spec:
               secretKeyRef:
                 name: {{ .Release.Name }}-redis
                 key: redis-password
+{{- end }}
           - name: POD_NODE_NAME
             valueFrom:
               fieldRef:
@@ -52,10 +54,7 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace            
-{{- range $pkey, $pval := .Values.env }}
-          - name: {{ $pkey }}
-            value: {{ quote $pval }}
-{{- end }}
+{{ toYaml .Values.env | indent 10 }}
           ports:
           - containerPort: {{ .Values.service.internalPort }}
             protocol: TCP
